@@ -1,4 +1,5 @@
 const express = require('express');
+const { forceInit } = require('../controllers/init');
 
 const router = express.Router();
 const db = require('../config/db');
@@ -18,7 +19,7 @@ router.get('/', async (req, res) => {
 
 router.get('/force', async (req, res) => {
   try {
-    await db.sync({ force: true });
+    await forceInit();
 
     res.status(200).json({
       success: true,

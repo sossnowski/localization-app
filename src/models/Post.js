@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const db = require('../config/db');
 const Like = require('./Like');
+const Comment = require('./Comment');
 
 const Post = db.define('post', {
   uid: {
@@ -23,6 +24,6 @@ const Post = db.define('post', {
 });
 
 Post.hasMany(Like);
-Like.belongsTo(Post);
+Post.hasMany(Comment);
 
 module.exports = Post;

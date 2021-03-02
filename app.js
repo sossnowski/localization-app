@@ -5,15 +5,16 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
 require('dotenv').config();
-const db = require('./src/config/db');
+// const db = require('./src/config/db');
 const userRoutes = require('./src/routes/user');
 const postRoutes = require('./src/routes/post');
 const likeRoutes = require('./src/routes/like');
 const initRoutes = require('./src/routes/init');
+const commentRoutes = require('./src/routes/comment');
 
 // db.authenticate()
 //   .then(console.log('connected'))
-//   .catch((error) => console.log(error));
+//   .catch((error) => throw error);
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -36,6 +37,7 @@ app.use('/init', initRoutes);
 app.use('/user', userRoutes);
 app.use('/post', postRoutes);
 app.use('/like', likeRoutes);
+app.use('/comment', commentRoutes);
 
 app.use((req, res, next) => {
   const error = new Error('Not found');

@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const Like = require('../models/Like');
 const Comment = require('../models/Comment');
 const User = require('../models/User');
@@ -13,18 +14,13 @@ module.exports.getAll = async () => {
 };
 
 module.exports.getByCategory = async (category) => {
-  //   const posts = await Post.findAll({
-  //     include: [{ model: Category, as: 'categories' }, User, Comment, Like],
-  //     where: { 'categories.name': category },
-  //   });
-  const posts = await Category.findOne({
+  const posts = await Post.findAll({
     include: [
-      {
-        model: Post,
-        include: [User, Comment, Like],
-      },
+      { model: Category, where: { name: category } },
+      User,
+      Comment,
+      Like,
     ],
-    where: { name: category },
   });
 
   return posts;

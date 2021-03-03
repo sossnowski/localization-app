@@ -11,6 +11,15 @@ module.exports.users = [
   },
 ];
 
+module.exports.categories = [
+  {
+    name: 'Zabytki',
+  },
+  {
+    name: 'Rekreacja',
+  },
+];
+
 module.exports.posts = [
   {
     title: 'title1',

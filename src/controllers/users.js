@@ -2,6 +2,7 @@ const { Op } = require('sequelize');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const CustomError = require('../helpers/error');
+const { generateToken } = require('../services/auth');
 
 const saltRounds = 12;
 
@@ -40,7 +41,7 @@ module.exports.login = async (userLoginData) => {
   if (!authorized) throw new CustomError(401, 'Invalid credentials');
 
   return {
-    token: 'jdbvjfvbjvfbfjbvf',
+    token: generateToken({ username: user.username }),
     user: {
       username: user.username,
       email: user.email,

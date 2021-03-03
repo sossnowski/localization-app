@@ -3,8 +3,9 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const { register, login } = require('../controllers/users');
+const { auth } = require('../services/auth');
 
-router.get('/', async (req, res, next) => {
+router.get('/', auth, async (req, res, next) => {
   try {
     const users = await User.findAll({});
 

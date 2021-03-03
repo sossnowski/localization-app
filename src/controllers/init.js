@@ -4,18 +4,23 @@ const User = require('../models/User');
 const Post = require('../models/Post');
 const Comment = require('../models/Comment');
 const Like = require('../models/Like');
+const Category = require('../models/Category');
 
 module.exports.forceInit = async () => {
   await db.sync({ force: true });
   const users = await User.bulkCreate(seed.users);
   const posts = [];
+  const categories = await Category.bulkCreate(seed.categories);
+
   for (const user of users) {
     for (const post of seed.posts) {
       post.userUid = user.uid;
+      post.categoryUid = categories[0].uid;
       const result = await Post.create(post);
       posts.push(result);
     }
   }
+
   for (const post of posts) {
     for (const comment of seed.comments) {
       comment.postUid = post.uid;

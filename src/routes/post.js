@@ -2,52 +2,33 @@ const express = require('express');
 
 const router = express.Router();
 const Post = require('../models/Post');
-const Like = require('../models/Like');
-const Comment = require('../models/Comment');
-const User = require('../models/User');
+const { getByCategory, getAll } = require('../controllers/post');
 
 router.get('/', async (req, res, next) => {
   try {
-    const posts = await Post.findAll({ include: [User, Comment, Like] });
+    const posts = await getAll();
 
-    // console.log(posts);
     res.status(200).json({
       posts,
     });
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 });
 
-router.get('/withOwner', async (req, res, next) => {
+router.get('/:category', async (req, res, next) => {
+  const { category } = req.params;
   try {
-    const posts = await Post.findAll({ include: 'user' });
+    const posts = await getByCategory(category);
 
-    console.log(posts);
     res.status(200).json({
       posts,
     });
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 });
 
-router.get('/add', async (req, res, next) => {
-  try {
-    const post = await Post.create({
-      title: 'test12',
-      description: 'jakis opis123',
-      userUid: 'c2f49432-41af-43f8-9d8c-235a68b9b5b5',
-      localization: { type: 'Point', coordinates: [1, 0] },
-    });
-
-    console.log(post);
-    res.status(200).json({
-      post,
-    });
-  } catch (error) {
-    console.log(error);
-  }
-});
+router.get('/add', async (req, res, next) => {});
 
 module.exports = router;

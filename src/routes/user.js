@@ -2,6 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const User = require('../models/User');
+const { register, login } = require('../controllers/users');
 
 router.get('/', async (req, res, next) => {
   try {
@@ -18,18 +19,21 @@ router.get('/', async (req, res, next) => {
 
 router.get('/signup', async (req, res, next) => {
   try {
-    const user = await User.create({
-      username: 'test',
-      email: 'test@tes.pl',
-      password: 'test',
-    });
+    const result = await register(req.body);
 
-    console.log(user);
-    res.status(200).json({
-      user,
-    });
+    res.status(201).json({ message: 'User created' });
   } catch (error) {
-    console.log(error);
+    next(error);
+  }
+});
+
+router.get('/login', async (req, res, next) => {
+  try {
+    const result = await login(req.body);
+
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
   }
 });
 

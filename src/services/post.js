@@ -9,3 +9,9 @@ module.exports.isUserPostOwner = async (postUid, userUid) => {
 
   return post?.userUid === userUid;
 };
+
+module.exports.postExists = async (uid) => {
+  const post = await Post.findOne({ where: { uid } });
+
+  return !!post;
+};

@@ -1,19 +1,53 @@
 const express = require('express');
+const { auth } = require('../services/auth');
 
 const router = express.Router();
-const Comment = require('../models/Post');
-const Like = require('../models/Like');
+const {
+  getPostComments,
+  add,
+  update,
+  deleteByUid,
+} = require('../controllers/comment');
 
-router.get('/:postUid', async (req, res, next) => {
-  const { postUid } = req.params;
+router.get('/:postUid', auth, async (req, res, next) => {
   try {
-    const comments = await Comment.findAll({ include: 'like', where: postUid });
+    const comments = await getPostComments(req.params.postUid);
 
     res.status(200).json({
       comments,
     });
   } catch (error) {
-    console.log(error);
+    next(error);
+  }
+});
+
+router.post('/', auth, async (req, res, next) => {
+  try {
+    const post = await add(req.body, req.data.uid);
+
+    res.status(201).json(post);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.patch('/', auth, async (req, res, next) => {
+  try {
+    const post = await update(req.body, req.data.uid);
+
+    res.status(200).json(post);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete('/:uid', auth, async (req, res, next) => {
+  try {
+    await deleteByUid(req.params.uid, req.data.uid);
+
+    res.status(200).json({ message: 'Successfuly removed' });
+  } catch (error) {
+    next(error);
   }
 });
 

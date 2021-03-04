@@ -1,8 +1,15 @@
 const express = require('express');
 
 const router = express.Router();
-const Post = require('../models/Post');
-const { getByCategory, getAll } = require('../controllers/post');
+const {
+  getByCategory,
+  getAll,
+  add,
+  update,
+  getByUid,
+  deleteByUid,
+} = require('../controllers/post');
+const { auth } = require('../services/auth');
 
 router.get('/', async (req, res, next) => {
   try {
@@ -16,7 +23,19 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.get('/:category', async (req, res, next) => {
+router.get('/:uid', async (req, res, next) => {
+  try {
+    const post = await getByUid(req.params.uid);
+
+    res.status(200).json({
+      post,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/category/:category', async (req, res, next) => {
   const { category } = req.params;
   try {
     const posts = await getByCategory(category);
@@ -29,6 +48,34 @@ router.get('/:category', async (req, res, next) => {
   }
 });
 
-router.get('/add', async (req, res, next) => {});
+router.post('/', auth, async (req, res, next) => {
+  try {
+    const post = await add(req.body, req.data.uid);
+
+    res.status(201).json(post);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.patch('/', auth, async (req, res, next) => {
+  try {
+    const post = await update(req.body, req.data.uid);
+
+    res.status(200).json(post);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete('/:uid', auth, async (req, res, next) => {
+  try {
+    await deleteByUid(req.params.uid, req.data.uid);
+
+    res.status(200).json({ message: 'Successfuly removed' });
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = router;

@@ -1,9 +1,10 @@
-const { Op } = require('sequelize');
 const Like = require('../models/Like');
 const Comment = require('../models/Comment');
 const User = require('../models/User');
 const Category = require('../models/Category');
 const Post = require('../models/Post');
+const CustomError = require('../helpers/error');
+const { isUserPostOwner } = require('../services/post');
 
 module.exports.getAll = async () => {
   const posts = await Post.findAll({
@@ -11,6 +12,12 @@ module.exports.getAll = async () => {
   });
 
   return posts;
+};
+
+module.exports.getByUid = async (uid) => {
+  const post = await Post.findOne({ where: { uid } });
+
+  return post;
 };
 
 module.exports.getByCategory = async (category) => {
@@ -24,4 +31,31 @@ module.exports.getByCategory = async (category) => {
   });
 
   return posts;
+};
+
+module.exports.add = async (postData, userUid) => {
+  const postToAdd = { ...postData, userUid };
+  const post = await Post.create(postToAdd);
+
+  return post;
+};
+
+module.exports.update = async (postData, userUid) => {
+  const isAllowedTOUpdate = await isUserPostOwner(postData.uid, userUid);
+  if (!isAllowedTOUpdate) throw new CustomError(400, 'Bad Request');
+
+  await Post.update(postData, {
+    where: { uid: postData.uid },
+  });
+
+  return postData;
+};
+
+module.exports.deleteByUid = async (postUid, userUid) => {
+  const isAllowedToRemove = await isUserPostOwner(postUid, userUid);
+  if (!isAllowedToRemove) throw new CustomError(400, 'Bad Request');
+
+  await Post.destroy({
+    where: { uid: postUid },
+  });
 };

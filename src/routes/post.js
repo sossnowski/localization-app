@@ -4,7 +4,7 @@ const router = express.Router();
 const {
   getByCategory,
   getAll,
-  getBYLocalization,
+  getByLocalization,
   add,
   update,
   getByUid,
@@ -28,9 +28,7 @@ router.get('/:uid', async (req, res, next) => {
   try {
     const post = await getByUid(req.params.uid);
 
-    res.status(200).json({
-      post,
-    });
+    res.status(200).json(post);
   } catch (error) {
     next(error);
   }
@@ -38,11 +36,9 @@ router.get('/:uid', async (req, res, next) => {
 
 router.get('/localization/:uid', async (req, res, next) => {
   try {
-    const posts = await getBYLocalization(req.params.uid);
+    const posts = await getByLocalization(req.params.uid);
 
-    res.status(200).json({
-      posts,
-    });
+    res.status(200).json(posts);
   } catch (error) {
     next(error);
   }

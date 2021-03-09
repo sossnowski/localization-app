@@ -11,6 +11,7 @@ const postRoutes = require('./src/routes/post');
 const likeRoutes = require('./src/routes/like');
 const initRoutes = require('./src/routes/init');
 const commentRoutes = require('./src/routes/comment');
+const localizationRoutes = require('./src/routes/localization');
 
 // db.authenticate()
 //   .then(console.log('connected'))
@@ -38,6 +39,7 @@ app.use('/user', userRoutes);
 app.use('/post', postRoutes);
 app.use('/like', likeRoutes);
 app.use('/comment', commentRoutes);
+app.use('/localization', localizationRoutes);
 
 app.use((req, res, next) => {
   const error = new Error('Not found');

@@ -23,5 +23,6 @@ const Localization = db.define('localization', {
 });
 
 Localization.hasMany(Post);
+Post.belongsTo(Localization);
 
 module.exports = Localization;

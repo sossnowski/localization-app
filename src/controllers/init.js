@@ -5,6 +5,7 @@ const Post = require('../models/Post');
 const Comment = require('../models/Comment');
 const Like = require('../models/Like');
 const Category = require('../models/Category');
+const Localization = require('../models/Localization');
 
 module.exports.forceInit = async () => {
   await db.sync({ force: true });
@@ -12,8 +13,10 @@ module.exports.forceInit = async () => {
   const posts = [];
   const categories = await Category.bulkCreate(seed.categories);
 
+  const localizations = await Localization.bulkCreate(seed.localizations);
   for (const user of users) {
     for (const post of seed.posts) {
+      post.localizationUid = localizations[0].uid;
       post.userUid = user.uid;
       post.categoryUid = categories[0].uid;
       const result = await Post.create(post);

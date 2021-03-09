@@ -18,10 +18,6 @@ const Post = db.define('post', {
     type: Sequelize.DataTypes.TEXT,
     allowNull: false,
   },
-  localization: {
-    type: Sequelize.DataTypes.GEOMETRY('POINT'),
-    allowNull: false,
-  },
 });
 
 Post.hasMany(Like);

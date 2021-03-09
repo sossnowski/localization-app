@@ -3,6 +3,7 @@ const Comment = require('../models/Comment');
 const User = require('../models/User');
 const Category = require('../models/Category');
 const Post = require('../models/Post');
+const Localization = require('../models/Localization');
 const CustomError = require('../helpers/error');
 const { isUserPostOwner } = require('../services/post');
 
@@ -18,6 +19,15 @@ module.exports.getByUid = async (uid) => {
   const post = await Post.findOne({ where: { uid } });
 
   return post;
+};
+
+module.exports.getByLocalization = async (uid) => {
+  const posts = await Localization.findOne({
+    where: { uid },
+    include: [Post, Comment, Like, User],
+  });
+
+  return posts;
 };
 
 module.exports.getByCategory = async (category) => {

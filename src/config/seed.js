@@ -11,6 +11,19 @@ module.exports.users = [
   },
 ];
 
+module.exports.localizations = [
+  {
+    city: 'Warszawa',
+    geometry: { type: 'Point', coordinates: [0, 1] },
+    name: 'nowa miejscowka',
+  },
+  {
+    city: 'Krk',
+    geometry: { type: 'Point', coordinates: [3, 1] },
+    name: 'nowa miejscowka2',
+  },
+];
+
 module.exports.categories = [
   {
     name: 'Zabytki',

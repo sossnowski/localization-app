@@ -22,13 +22,6 @@ module.exports.getByUid = async (uid) => {
 };
 
 module.exports.getByLocalization = async (uid) => {
-  // const posts = await Post.findAll({
-  //   include: {
-  //     model: Localization,
-  //     where: { uid },
-  //   },
-  // });
-
   const posts = Localization.findOne({
     where: { uid },
     include: {

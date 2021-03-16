@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const { register, login } = require('../controllers/users');
 
-router.get('/signup', async (req, res, next) => {
+router.post('/register', async (req, res, next) => {
   try {
     await register(req.body);
 
@@ -13,7 +13,7 @@ router.get('/signup', async (req, res, next) => {
   }
 });
 
-router.get('/login', async (req, res, next) => {
+router.post('/login', async (req, res, next) => {
   try {
     const result = await login(req.body);
 

@@ -5,6 +5,7 @@ const {
   getByCategory,
   getAll,
   getByLocalization,
+  getFromLocalizations,
   add,
   update,
   getByUid,
@@ -37,6 +38,16 @@ router.get('/:uid', async (req, res, next) => {
 router.get('/localization/:uid', async (req, res, next) => {
   try {
     const posts = await getByLocalization(req.params.uid);
+
+    res.status(200).json(posts);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/localizations/uids', async (req, res, next) => {
+  try {
+    const posts = await getFromLocalizations(req.query.uids);
 
     res.status(200).json(posts);
   } catch (error) {

@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const Like = require('../models/Like');
 const Comment = require('../models/Comment');
 const User = require('../models/User');
@@ -37,6 +38,27 @@ module.exports.getByCategory = async (category) => {
   const posts = await Post.findAll({
     include: [
       { model: Category, where: { name: category } },
+      User,
+      Comment,
+      Like,
+    ],
+  });
+
+  return posts;
+};
+
+module.exports.getFromLocalizations = async (localizations) => {
+  const posts = await Post.findAll({
+    include: [
+      {
+        model: Localization,
+        where: {
+          uid: {
+            [Op.or]: localizations,
+          },
+        },
+      },
+      Category,
       User,
       Comment,
       Like,

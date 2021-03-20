@@ -1,4 +1,5 @@
 const Comment = require('../models/Comment');
+const Like = require('../models/Like');
 const CustomError = require('../helpers/error');
 const { postExists } = require('../services/post');
 const { isUserCommentOwner } = require('../services/comment');
@@ -38,4 +39,11 @@ module.exports.deleteByUid = async (commentUid, userUid) => {
   await Comment.destroy({
     where: { uid: commentUid },
   });
+};
+
+module.exports.getLikes = async (commentUid) => {
+  console.log(commentUid);
+  const likes = await Like.findAll({ where: { commentUid } });
+
+  return likes;
 };

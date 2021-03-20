@@ -7,6 +7,7 @@ const {
   add,
   update,
   deleteByUid,
+  getLikes,
 } = require('../controllers/comment');
 
 router.get('/:postUid', auth, async (req, res, next) => {
@@ -46,6 +47,18 @@ router.delete('/:uid', auth, async (req, res, next) => {
     await deleteByUid(req.params.uid, req.data.uid);
 
     res.status(200).json({ message: 'Successfuly removed' });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/likes/:uid', auth, async (req, res, next) => {
+  console.log('jkdwbfhkeabkhbek');
+  try {
+    console.log(req.params.uid);
+    const likes = await getLikes(req.params.uid);
+
+    res.status(200).json(likes);
   } catch (error) {
     next(error);
   }

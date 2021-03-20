@@ -1,45 +1,28 @@
 const express = require('express');
 
 const router = express.Router();
-const Like = require('../models/Like');
+const { setLike, addLike } = require('../controllers/like');
+const { auth } = require('../services/auth');
 
-router.get('/', async (req, res, next) => {
+router.patch('/set/post', auth, async (req, res, next) => {
   try {
-    const likes = await Like.findAll({});
-
-    console.log(likes);
+    await setLike(req.body.postUid, req.body.isUpVote, req.data.uid);
     res.status(200).json({
-      likes,
+      message: 'success',
     });
   } catch (error) {
     console.log(error);
   }
 });
 
-router.get('/withOwner', async (req, res, next) => {
+router.post('/add/post', auth, async (req, res, next) => {
   try {
-    const posts = await Like.findAll({ include: 'user' });
-
-    console.log(posts);
-    res.status(200).json({
-      posts,
-    });
-  } catch (error) {
-    console.log(error);
-  }
-});
-
-router.get('/add', async (req, res, next) => {
-  try {
-    const like = await Like.create({
-      isUpVote: true,
-      userUid: 'c2f49432-41af-43f8-9d8c-235a68b9b5b5',
-      postUid: '52634bab-1e8d-42e3-b2fa-00e70e557e70',
-    });
-
-    res.status(200).json({
-      like,
-    });
+    const like = await addLike(
+      req.body.postUid,
+      req.body.isUpVote,
+      req.data.uid
+    );
+    res.status(201).json(like);
   } catch (error) {
     console.log(error);
   }

@@ -7,6 +7,7 @@ const Post = require('../models/Post');
 const Localization = require('../models/Localization');
 const CustomError = require('../helpers/error');
 const { isUserPostOwner } = require('../services/post');
+const db = require('../config/db');
 
 module.exports.getAll = async () => {
   const posts = await Post.findAll({
@@ -69,28 +70,26 @@ module.exports.getFromLocalizations = async (localizations) => {
 };
 
 module.exports.add = async (postData, userUid) => {
-  const postToAdd = { ...postData, userUid };
-  const post = await Post.create(postToAdd);
+  const localizationToAdd = {
+    geometry: postData.geometry,
+    city: postData.city,
+  };
 
-  return post;
-};
+  const result = await db.transaction(async (t) => {
+    const localization = await Localization.create(localizationToAdd, {
+      transaction: t,
+    });
+    const postToAdd = {
+      ...postData,
+      userUid,
+      localizationUid: localization.uid,
+    };
+    delete postToAdd.city;
+    delete postToAdd.geometry;
+    const post = await Post.create(postToAdd, { transaction: t });
 
-module.exports.update = async (postData, userUid) => {
-  const isAllowedTOUpdate = await isUserPostOwner(postData.uid, userUid);
-  if (!isAllowedTOUpdate) throw new CustomError(400, 'Bad Request');
-
-  await Post.update(postData, {
-    where: { uid: postData.uid },
+    return { ...post.dataValues, localization: localization.dataValues };
   });
 
-  return postData;
-};
-
-module.exports.deleteByUid = async (postUid, userUid) => {
-  const isAllowedToRemove = await isUserPostOwner(postUid, userUid);
-  if (!isAllowedToRemove) throw new CustomError(400, 'Bad Request');
-
-  await Post.destroy({
-    where: { uid: postUid },
-  });
+  return result;
 };

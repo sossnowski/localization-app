@@ -10,7 +10,7 @@ const Localization = db.define('localization', {
   },
   name: {
     type: Sequelize.DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   geometry: {
     type: Sequelize.DataTypes.GEOMETRY('POINT'),

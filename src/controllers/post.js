@@ -93,3 +93,6 @@ module.exports.add = async (postData, userUid) => {
 
   return result;
 };
+
+module.exports.addToLocalization = async (postData, userUid) =>
+  Post.create({ ...postData, userUid });

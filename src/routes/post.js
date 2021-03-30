@@ -10,6 +10,7 @@ const {
   update,
   getByUid,
   deleteByUid,
+  addToLocalization,
 } = require('../controllers/post');
 const { auth } = require('../services/auth');
 
@@ -71,6 +72,16 @@ router.get('/category/:category', async (req, res, next) => {
 router.post('/', auth, async (req, res, next) => {
   try {
     const post = await add(req.body, req.data.uid);
+
+    res.status(201).json(post);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post('/localization', auth, async (req, res, next) => {
+  try {
+    const post = await addToLocalization(req.body, req.data.uid);
 
     res.status(201).json(post);
   } catch (error) {

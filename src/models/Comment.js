@@ -14,6 +14,8 @@ const Comment = db.define('comment', {
   },
 });
 
-Comment.hasMany(Like);
+Comment.hasMany(Like, {
+  onDelete: 'CASCADE',
+});
 
 module.exports = Comment;

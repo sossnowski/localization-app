@@ -20,8 +20,12 @@ const Post = db.define('post', {
   },
 });
 
-Post.hasMany(Like);
-Post.hasMany(Comment);
+Post.hasMany(Like, {
+  onDelete: 'cascade',
+});
+Post.hasMany(Comment, {
+  onDelete: 'cascade',
+});
 Post.belongsTo(Category);
 Category.hasMany(Post);
 

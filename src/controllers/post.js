@@ -107,3 +107,12 @@ module.exports.update = async (postData, userUid) => {
 
   return postData;
 };
+
+module.exports.deleteByUid = async (postUid, userUid) => {
+  const isAllowedToRemove = await isUserPostOwner(postUid, userUid);
+  if (!isAllowedToRemove) throw new CustomError(400, 'Bad Request');
+
+  await Post.destroy({
+    where: { uid: postUid },
+  });
+};

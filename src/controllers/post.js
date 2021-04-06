@@ -96,3 +96,14 @@ module.exports.add = async (postData, userUid) => {
 
 module.exports.addToLocalization = async (postData, userUid) =>
   Post.create({ ...postData, userUid });
+
+module.exports.update = async (postData, userUid) => {
+  const isAllowedTOUpdate = await isUserPostOwner(postData.uid, userUid);
+  if (!isAllowedTOUpdate) throw new CustomError(400, 'Bad Request');
+
+  await Post.update(postData, {
+    where: { uid: postData.uid },
+  });
+
+  return postData;
+};

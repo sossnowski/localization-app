@@ -15,7 +15,7 @@ module.exports.add = async (commentData, userUid) => {
   const isPostExists = await postExists(postUid);
   if (!isPostExists) throw new CustomError(400, 'Bad Request');
 
-  const postToAdd = { ...commentData, userUid, postUid };
+  const postToAdd = { ...commentData, userUid };
   const comment = await Comment.create(postToAdd);
 
   return comment;

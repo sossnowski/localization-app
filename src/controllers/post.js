@@ -28,7 +28,11 @@ module.exports.getByLocalization = async (uid) => {
     where: { uid },
     include: {
       model: Post,
-      include: [User, Comment, Like],
+      include: [
+        { model: User, attributes: ['username', 'uid'] },
+        Comment,
+        Like,
+      ],
     },
   });
 
@@ -60,7 +64,7 @@ module.exports.getFromLocalizations = async (localizations) => {
         },
       },
       Category,
-      User,
+      { model: User, attributes: ['username', 'uid'] },
       Comment,
       Like,
     ],

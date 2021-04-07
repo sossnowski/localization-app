@@ -38,5 +38,6 @@ User.hasMany(Post);
 Post.belongsTo(User);
 User.hasMany(Like);
 User.hasMany(Comment);
+Comment.belongsTo(User);
 
 module.exports = User;

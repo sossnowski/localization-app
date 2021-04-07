@@ -14,9 +14,7 @@ router.get('/:postUid', auth, async (req, res, next) => {
   try {
     const comments = await getPostComments(req.params.postUid);
 
-    res.status(200).json({
-      comments,
-    });
+    res.status(200).json(comments);
   } catch (error) {
     next(error);
   }

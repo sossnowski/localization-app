@@ -1,11 +1,15 @@
 const Comment = require('../models/Comment');
 const Like = require('../models/Like');
+const User = require('../models/User');
 const CustomError = require('../helpers/error');
 const { postExists } = require('../services/post');
 const { isUserCommentOwner } = require('../services/comment');
 
 module.exports.getPostComments = async (postUid) => {
-  const comments = await Comment.findAll({ where: { postUid } });
+  const comments = await Comment.findAll({
+    where: { postUid },
+    include: [{ model: User, attributes: ['username', 'uid'] }, Like],
+  });
 
   return comments;
 };

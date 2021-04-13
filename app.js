@@ -33,7 +33,7 @@ app.use((req, res, next) => {
   }
   next();
 });
-
+app.use('/pictures', express.static('pictures'));
 app.use('/init', initRoutes);
 app.use('/user', userRoutes);
 app.use('/post', postRoutes);

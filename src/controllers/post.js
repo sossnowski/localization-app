@@ -8,6 +8,7 @@ const Localization = require('../models/Localization');
 const CustomError = require('../helpers/error');
 const { isUserPostOwner } = require('../services/post');
 const db = require('../config/db');
+const Photo = require('../models/Category');
 
 module.exports.getAll = async () => {
   const posts = await Post.findAll({
@@ -67,6 +68,7 @@ module.exports.getFromLocalizations = async (localizations) => {
       { model: User, attributes: ['username', 'uid'] },
       Comment,
       Like,
+      Photo,
     ],
   });
 
@@ -98,8 +100,23 @@ module.exports.add = async (postData, userUid) => {
   return result;
 };
 
-module.exports.addToLocalization = async (postData, userUid) =>
-  Post.create({ ...postData, userUid });
+module.exports.addToLocalization = async (postData, files, userUid) => {
+  console.log(files.post);
+  const result = await db.transaction(async (t) => {
+    const photo = await Photo.create(
+      { filename: files.post[0].filename },
+      { transaction: t }
+    );
+    const post = await Post.create(
+      { ...postData, userUid, photoUid: photo.uid },
+      { transaction: t }
+    );
+
+    return { ...post, filename: photo.filename };
+  });
+
+  return result;
+};
 
 module.exports.update = async (postData, userUid) => {
   const isAllowedTOUpdate = await isUserPostOwner(postData.uid, userUid);

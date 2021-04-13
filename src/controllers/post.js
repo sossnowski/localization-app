@@ -75,9 +75,9 @@ module.exports.getFromLocalizations = async (localizations) => {
   return posts;
 };
 
-module.exports.add = async (postData, userUid) => {
+module.exports.add = async (postData, files, userUid) => {
   const localizationToAdd = {
-    geometry: postData.geometry,
+    geometry: JSON.parse(postData.geometry),
     city: postData.city,
   };
 
@@ -85,34 +85,53 @@ module.exports.add = async (postData, userUid) => {
     const localization = await Localization.create(localizationToAdd, {
       transaction: t,
     });
+    let savedPhoto = null;
+    if (files.post) {
+      const photo = await Photo.create(
+        { filename: files.post[0].filename },
+        { transaction: t }
+      );
+      savedPhoto = photo;
+    }
+
     const postToAdd = {
       ...postData,
       userUid,
       localizationUid: localization.uid,
+      photoUid: savedPhoto?.uid,
     };
+
     delete postToAdd.city;
     delete postToAdd.geometry;
     const post = await Post.create(postToAdd, { transaction: t });
 
-    return { ...post.dataValues, localization: localization.dataValues };
+    return {
+      ...post.dataValues,
+      localization: localization.dataValues,
+      filename: savedPhoto.filename,
+    };
   });
 
   return result;
 };
 
 module.exports.addToLocalization = async (postData, files, userUid) => {
-  console.log(files.post);
   const result = await db.transaction(async (t) => {
-    const photo = await Photo.create(
-      { filename: files.post[0].filename },
-      { transaction: t }
-    );
+    let savedPhoto = null;
+    if (files.post) {
+      const photo = await Photo.create(
+        { filename: files.post[0].filename },
+        { transaction: t }
+      );
+      savedPhoto = photo;
+    }
+
     const post = await Post.create(
-      { ...postData, userUid, photoUid: photo.uid },
+      { ...postData, userUid, photoUid: savedPhoto?.uid },
       { transaction: t }
     );
 
-    return { ...post, filename: photo.filename };
+    return { ...post, filename: savedPhoto?.filename };
   });
 
   return result;

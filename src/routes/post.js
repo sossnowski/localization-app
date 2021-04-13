@@ -72,7 +72,7 @@ router.get('/category/:category', async (req, res, next) => {
 
 router.post('/', auth, fileUploader, async (req, res, next) => {
   try {
-    const post = await add(req.body, req.data.uid);
+    const post = await add(req.body, req.files, req.data.uid);
 
     res.status(201).json(post);
   } catch (error) {

@@ -1,5 +1,6 @@
 const { Op } = require('sequelize');
 const fs = require('fs');
+const path = require('path');
 const Like = require('../models/Like');
 const Comment = require('../models/Comment');
 const User = require('../models/User');
@@ -152,14 +153,16 @@ module.exports.deleteByUid = async (postUid, userUid) => {
   const isAllowedToRemove = await isUserPostOwner(postUid, userUid);
   if (!isAllowedToRemove) throw new CustomError(400, 'Bad Request');
 
-  const postToRemove = Post.findOne({
+  const postToRemove = await Post.findOne({
     where: { uid: postUid },
     include: [Photo],
   });
-  console.log(postToRemove);
-  if (postToRemove.photoUid) {
-    console.log(postToRemove.photo.filename);
-    fs.unlinkSync(`../../pictures/post/${postToRemove.photo.filename}`);
+  if (postToRemove.photos.length) {
+    fs.unlinkSync(
+      `${path.dirname(require.main.filename)}/pictures/post/${
+        postToRemove.photos[0].filename
+      }`
+    );
   }
 
   await Post.destroy({

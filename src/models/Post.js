@@ -3,6 +3,7 @@ const db = require('../config/db');
 const Like = require('./Like');
 const Comment = require('./Comment');
 const Category = require('./Category');
+const Photo = require('./Photo');
 
 const Post = db.define('post', {
   uid: {
@@ -28,5 +29,8 @@ Post.hasMany(Comment, {
 });
 Post.belongsTo(Category);
 Category.hasMany(Post);
+Post.hasMany(Photo, {
+  onDelete: 'cascade',
+});
 
 module.exports = Post;

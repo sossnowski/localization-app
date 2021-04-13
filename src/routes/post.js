@@ -12,6 +12,7 @@ const {
   deleteByUid,
   addToLocalization,
 } = require('../controllers/post');
+const { fileUploader } = require('../services/post');
 const { auth } = require('../services/auth');
 
 router.get('/', async (req, res, next) => {
@@ -69,7 +70,7 @@ router.get('/category/:category', async (req, res, next) => {
   }
 });
 
-router.post('/', auth, async (req, res, next) => {
+router.post('/', auth, fileUploader, async (req, res, next) => {
   try {
     const post = await add(req.body, req.data.uid);
 
@@ -79,9 +80,9 @@ router.post('/', auth, async (req, res, next) => {
   }
 });
 
-router.post('/localization', auth, async (req, res, next) => {
+router.post('/localization', auth, fileUploader, async (req, res, next) => {
   try {
-    const post = await addToLocalization(req.body, req.data.uid);
+    const post = await addToLocalization(req.body, req.files, req.data.uid);
 
     res.status(201).json(post);
   } catch (error) {

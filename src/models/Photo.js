@@ -1,21 +1,17 @@
 const Sequelize = require('sequelize');
 const db = require('../config/db');
-const Post = require('./Post');
 
-const Category = db.define('category', {
+const Photo = db.define('photo', {
   uid: {
     type: Sequelize.DataTypes.UUID,
     defaultValue: Sequelize.UUIDV4,
     primaryKey: true,
   },
-  name: {
+  filename: {
     type: Sequelize.DataTypes.STRING,
     allowNull: false,
-  },
-  confirmed: {
-    type: Sequelize.DataTypes.BOOLEAN,
-    defaultValue: false,
+    unique: true,
   },
 });
 
-module.exports = Category;
+module.exports = Photo;

@@ -30,7 +30,5 @@ Post.hasMany(Comment, {
 Post.hasMany(Photo, {
   onDelete: 'cascade',
 });
-Post.belongsTo(Category);
-Category.hasMany(Post);
 
 module.exports = Post;

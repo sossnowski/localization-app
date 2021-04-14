@@ -42,18 +42,18 @@ module.exports.getByLocalization = async (uid) => {
   return posts;
 };
 
-module.exports.getByCategory = async (category) => {
-  const posts = await Post.findAll({
-    include: [
-      { model: Category, where: { name: category } },
-      User,
-      Comment,
-      Like,
-    ],
-  });
+// module.exports.getByCategory = async (category) => {
+//   const posts = await Post.findAll({
+//     include: [
+//       { model: Category, where: { name: category } },
+//       User,
+//       Comment,
+//       Like,
+//     ],
+//   });
 
-  return posts;
-};
+//   return posts;
+// };
 
 module.exports.getFromLocalizations = async (localizations) => {
   const posts = await Post.findAll({
@@ -66,7 +66,6 @@ module.exports.getFromLocalizations = async (localizations) => {
           },
         },
       },
-      Category,
       { model: User, attributes: ['username', 'uid'] },
       Comment,
       Like,

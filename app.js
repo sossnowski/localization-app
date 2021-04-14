@@ -14,10 +14,6 @@ const commentRoutes = require('./src/routes/comment');
 const localizationRoutes = require('./src/routes/localization');
 const categoryRoutes = require('./src/routes/category');
 
-// db.authenticate()
-//   .then(console.log('connected'))
-//   .catch((error) => throw error);
-
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

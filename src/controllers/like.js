@@ -16,6 +16,7 @@ module.exports.setLike = async (postUid, isUpVote, userUid) => {
 module.exports.addLike = async (postUid, isUpVote, userUid) => {
   const result = await Like.findOne({ where: { postUid, userUid } });
   if (result) throw new CustomError(400, 'Bad Request');
+
   return Like.create({ isUpVote, postUid, userUid });
 };
 

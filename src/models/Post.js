@@ -27,6 +27,7 @@ Post.hasMany(Like, {
 Post.hasMany(Comment, {
   onDelete: 'cascade',
 });
+Comment.belongsTo(Post);
 Post.hasMany(Photo, {
   onDelete: 'cascade',
 });

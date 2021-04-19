@@ -21,6 +21,7 @@ router.patch('/post', auth, async (req, res, next) => {
     emitPostLikeUpdateEvent(req.app.get('io'), {
       ...req.body,
       actionUser: req.data,
+      localizationUid: req.body.localizationUid,
     });
     res.status(200).json({
       message: 'success',
@@ -40,6 +41,7 @@ router.post('/post', auth, async (req, res, next) => {
     emitPostLikeEvent(req.app.get('io'), {
       like,
       actionUser: req.data,
+      localizationUid: req.body.localizationUid,
     });
     res.status(201).json(like);
   } catch (error) {

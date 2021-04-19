@@ -14,6 +14,7 @@ const {
 } = require('../controllers/post');
 const { fileUploader } = require('../services/post');
 const { auth } = require('../services/auth');
+const { emitPostEvent } = require('../services/socket/post');
 
 router.get('/', async (req, res, next) => {
   try {
@@ -83,6 +84,7 @@ router.post('/', auth, fileUploader, async (req, res, next) => {
 router.post('/localization', auth, fileUploader, async (req, res, next) => {
   try {
     const post = await addToLocalization(req.body, req.files, req.data.uid);
+    emitPostEvent(req.app.get('io'), post);
 
     res.status(201).json(post);
   } catch (error) {

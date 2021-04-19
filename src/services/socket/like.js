@@ -14,6 +14,12 @@ module.exports.emitPostLikeUpdateEvent = async (io, data) => {
     isUpVote: data.isUpVote,
     postUid: data.postUid,
   });
+
+  io.sockets.in(`Loc_${data.localizationUid}`).emit('postLikeUpdate', {
+    userUid: data.actionUser.uid,
+    isUpVote: data.isUpVote,
+    postUid: data.postUid,
+  });
 };
 
 module.exports.emitPostLikeEvent = async (io, data) => {
@@ -26,6 +32,8 @@ module.exports.emitPostLikeEvent = async (io, data) => {
     actionOwner: data.actionUser.username,
     like: data.like,
   });
+
+  io.sockets.in(`Loc_${data.localizationUid}`).emit('postLike', data.like);
 };
 
 module.exports.emitCommentLikeUpdateEvent = async (io, data) => {

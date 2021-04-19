@@ -14,6 +14,10 @@ io.on('connection', (socket) => {
     console.log(`user joined.. ${socket.handshake.query.auth}`);
     socket.join(socket.handshake.query.auth);
   }
+  socket.on('userLeave', (data) => {
+    socket.leave(data);
+    console.log('user leaved the room');
+  });
   socket.on('disconnect', () => {
     console.log('user disconnected');
   });

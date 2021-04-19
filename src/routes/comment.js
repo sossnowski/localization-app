@@ -9,6 +9,7 @@ const {
   deleteByUid,
   getLikes,
 } = require('../controllers/comment');
+const { emitCommentEvent } = require('../services/socket/comment');
 
 router.get('/:postUid', auth, async (req, res, next) => {
   try {
@@ -22,9 +23,13 @@ router.get('/:postUid', auth, async (req, res, next) => {
 
 router.post('/', auth, async (req, res, next) => {
   try {
-    const post = await add(req.body, req.data.uid);
+    const comment = await add(req.body, req.data.uid);
+    emitCommentEvent(req.app.get('io'), {
+      comment,
+      actionUser: req.data,
+    });
 
-    res.status(201).json(post);
+    res.status(201).json(comment);
   } catch (error) {
     next(error);
   }

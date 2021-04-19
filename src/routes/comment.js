@@ -27,6 +27,7 @@ router.post('/', auth, async (req, res, next) => {
     emitCommentEvent(req.app.get('io'), {
       comment,
       actionUser: req.data,
+      localizationUid: req.body.localizationUid,
     });
 
     res.status(201).json(comment);

@@ -42,8 +42,15 @@ module.exports.emitCommentLikeUpdateEvent = async (io, data) => {
     include: { model: Post, attributes: ['uid', 'userUid'] },
   });
 
-  io.to(comment.post.userUid).emit('commentLikeUpdate', {
+  io.to(comment.userUid).emit('commentLikeUpdate', {
     actionOwner: data.actionUser.username,
+    userUid: data.actionUser.uid,
+    isUpVote: data.isUpVote,
+    postUid: comment.post.uid,
+    commentUid: comment.uid,
+  });
+
+  io.sockets.in(`Loc_${data.localizationUid}`).emit('commentLikeUpdate', {
     userUid: data.actionUser.uid,
     isUpVote: data.isUpVote,
     postUid: comment.post.uid,
@@ -57,8 +64,13 @@ module.exports.emitCommentLikeEvent = async (io, data) => {
     include: { model: Post, attributes: ['uid', 'userUid'] },
   });
 
-  io.to(comment.post.userUid).emit('commentLike', {
+  io.to(comment.userUid).emit('commentLike', {
     actionOwner: data.actionUser.username,
+    like: data.like,
+    postUid: comment.post.uid,
+  });
+
+  io.sockets.in(`Loc_${data.localizationUid}`).emit('commentLike', {
     like: data.like,
     postUid: comment.post.uid,
   });

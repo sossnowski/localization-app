@@ -55,6 +55,7 @@ router.patch('/comment', auth, async (req, res, next) => {
     emitCommentLikeUpdateEvent(req.app.get('io'), {
       ...req.body,
       actionUser: req.data,
+      localizationUid: req.body.localizationUid,
     });
     res.status(200).json({
       message: 'success',
@@ -74,6 +75,7 @@ router.post('/comment', auth, async (req, res, next) => {
     emitCommentLikeEvent(req.app.get('io'), {
       like,
       actionUser: req.data,
+      localizationUid: req.body.localizationUid,
     });
     res.status(201).json(like);
   } catch (error) {

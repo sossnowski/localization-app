@@ -11,4 +11,8 @@ module.exports.emitCommentEvent = async (io, data) => {
     actionOwner: data.actionUser.username,
     comment: { ...data.comment.dataValues, likes: [] },
   });
+
+  io.sockets
+    .in(`Loc_${data.localizationUid}`)
+    .emit('addComment', { ...data.comment.dataValues, likes: [] });
 };

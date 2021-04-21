@@ -1,4 +1,5 @@
 const Post = require('../../models/Post');
+const { addComment } = require('../notifications/main');
 
 module.exports.emitCommentEvent = async (io, data) => {
   const commentedPostOwner = await Post.findOne({
@@ -7,10 +8,17 @@ module.exports.emitCommentEvent = async (io, data) => {
   });
 
   if (commentedPostOwner.userUid === data.actionUser.uid) return;
-  io.to(commentedPostOwner.userUid).emit('addComment', {
-    actionOwner: data.actionUser.username,
-    comment: { ...data.comment.dataValues, likes: [] },
-  });
+
+  const notification = await addComment(
+    {
+      username: data.actionUser.username,
+      commentUid: data.comment.dataValues.uid,
+    },
+    data.actionUser.uid,
+    commentedPostOwner.userUid
+  );
+
+  io.to(commentedPostOwner.userUid).emit('notification', notification);
 
   io.sockets
     .in(`Loc_${data.localizationUid}`)

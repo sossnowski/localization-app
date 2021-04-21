@@ -18,7 +18,7 @@ const {
 router.patch('/post', auth, async (req, res, next) => {
   try {
     await setLike(req.body.postUid, req.body.isUpVote, req.data.uid);
-    emitPostLikeUpdateEvent(req.app.get('io'), {
+    await emitPostLikeUpdateEvent(req.app.get('io'), {
       ...req.body,
       actionUser: req.data,
       localizationUid: req.body.localizationUid,
@@ -38,7 +38,7 @@ router.post('/post', auth, async (req, res, next) => {
       req.body.isUpVote,
       req.data.uid
     );
-    emitPostLikeEvent(req.app.get('io'), {
+    await emitPostLikeEvent(req.app.get('io'), {
       like,
       actionUser: req.data,
       localizationUid: req.body.localizationUid,
@@ -52,7 +52,7 @@ router.post('/post', auth, async (req, res, next) => {
 router.patch('/comment', auth, async (req, res, next) => {
   try {
     await setCommentLike(req.body.commentUid, req.body.isUpVote, req.data.uid);
-    emitCommentLikeUpdateEvent(req.app.get('io'), {
+    await emitCommentLikeUpdateEvent(req.app.get('io'), {
       ...req.body,
       actionUser: req.data,
       localizationUid: req.body.localizationUid,
@@ -72,7 +72,7 @@ router.post('/comment', auth, async (req, res, next) => {
       req.body.isUpVote,
       req.data.uid
     );
-    emitCommentLikeEvent(req.app.get('io'), {
+    await emitCommentLikeEvent(req.app.get('io'), {
       like,
       actionUser: req.data,
       localizationUid: req.body.localizationUid,

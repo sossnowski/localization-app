@@ -24,7 +24,7 @@ router.get('/:postUid', auth, async (req, res, next) => {
 router.post('/', auth, async (req, res, next) => {
   try {
     const comment = await add(req.body, req.data.uid);
-    emitCommentEvent(req.app.get('io'), {
+    await emitCommentEvent(req.app.get('io'), {
       comment,
       actionUser: req.data,
       localizationUid: req.body.localizationUid,
@@ -57,9 +57,7 @@ router.delete('/:uid', auth, async (req, res, next) => {
 });
 
 router.get('/likes/:uid', auth, async (req, res, next) => {
-  console.log('jkdwbfhkeabkhbek');
   try {
-    console.log(req.params.uid);
     const likes = await getLikes(req.params.uid);
 
     res.status(200).json(likes);

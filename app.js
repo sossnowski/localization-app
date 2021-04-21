@@ -13,6 +13,7 @@ const initRoutes = require('./src/routes/init');
 const commentRoutes = require('./src/routes/comment');
 const localizationRoutes = require('./src/routes/localization');
 const categoryRoutes = require('./src/routes/category');
+const notificationRoutes = require('./src/routes/notification');
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -38,6 +39,7 @@ app.use('/like', likeRoutes);
 app.use('/comment', commentRoutes);
 app.use('/localization', localizationRoutes);
 app.use('/category', categoryRoutes);
+app.use('/notification', notificationRoutes);
 
 app.use((req, res, next) => {
   const error = new Error('Not found');

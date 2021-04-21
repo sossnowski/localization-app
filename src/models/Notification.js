@@ -21,6 +21,10 @@ const Notification = db.define(
       type: Sequelize.DataTypes.STRING,
       allowNull: false,
     },
+    new: {
+      type: Sequelize.DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
   },
   {
     indexes: [{ fields: ['createdAt'] }],

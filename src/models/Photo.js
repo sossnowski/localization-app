@@ -1,21 +1,17 @@
 const Sequelize = require('sequelize');
 const db = require('../config/db');
-const Like = require('./Like');
 
-const Comment = db.define('comment', {
+const Photo = db.define('photo', {
   uid: {
     type: Sequelize.DataTypes.UUID,
     defaultValue: Sequelize.UUIDV4,
     primaryKey: true,
   },
-  text: {
+  filename: {
     type: Sequelize.DataTypes.STRING,
     allowNull: false,
+    unique: true,
   },
 });
 
-Comment.hasMany(Like, {
-  onDelete: 'CASCADE',
-});
-
-module.exports = Comment;
+module.exports = Photo;

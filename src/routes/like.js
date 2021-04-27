@@ -1,47 +1,85 @@
 const express = require('express');
 
 const router = express.Router();
-const Like = require('../models/Like');
+const {
+  setLike,
+  addLike,
+  setCommentLike,
+  addCommentLike,
+} = require('../controllers/like');
+const { auth } = require('../services/auth');
+const {
+  emitPostLikeEvent,
+  emitPostLikeUpdateEvent,
+  emitCommentLikeUpdateEvent,
+  emitCommentLikeEvent,
+} = require('../services/socket/like');
 
-router.get('/', async (req, res, next) => {
+router.patch('/post', auth, async (req, res, next) => {
   try {
-    const likes = await Like.findAll({});
-
-    console.log(likes);
+    await setLike(req.body.postUid, req.body.isUpVote, req.data.uid);
+    await emitPostLikeUpdateEvent(req.app.get('io'), {
+      ...req.body,
+      actionUser: req.data,
+      localizationUid: req.body.localizationUid,
+    });
     res.status(200).json({
-      likes,
+      message: 'success',
     });
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 });
 
-router.get('/withOwner', async (req, res, next) => {
+router.post('/post', auth, async (req, res, next) => {
   try {
-    const posts = await Like.findAll({ include: 'user' });
-
-    console.log(posts);
-    res.status(200).json({
-      posts,
-    });
-  } catch (error) {
-    console.log(error);
-  }
-});
-
-router.get('/add', async (req, res, next) => {
-  try {
-    const like = await Like.create({
-      isUpVote: true,
-      userUid: 'c2f49432-41af-43f8-9d8c-235a68b9b5b5',
-      postUid: '52634bab-1e8d-42e3-b2fa-00e70e557e70',
-    });
-
-    res.status(200).json({
+    const like = await addLike(
+      req.body.postUid,
+      req.body.isUpVote,
+      req.data.uid
+    );
+    await emitPostLikeEvent(req.app.get('io'), {
       like,
+      actionUser: req.data,
+      localizationUid: req.body.localizationUid,
+    });
+    res.status(201).json(like);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.patch('/comment', auth, async (req, res, next) => {
+  try {
+    await setCommentLike(req.body.commentUid, req.body.isUpVote, req.data.uid);
+    await emitCommentLikeUpdateEvent(req.app.get('io'), {
+      ...req.body,
+      actionUser: req.data,
+      localizationUid: req.body.localizationUid,
+    });
+    res.status(200).json({
+      message: 'success',
     });
   } catch (error) {
-    console.log(error);
+    next(error);
+  }
+});
+
+router.post('/comment', auth, async (req, res, next) => {
+  try {
+    const like = await addCommentLike(
+      req.body.commentUid,
+      req.body.isUpVote,
+      req.data.uid
+    );
+    await emitCommentLikeEvent(req.app.get('io'), {
+      like,
+      actionUser: req.data,
+      localizationUid: req.body.localizationUid,
+    });
+    res.status(201).json(like);
+  } catch (error) {
+    next(error);
   }
 });
 

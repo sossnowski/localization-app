@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const db = require('../config/db');
 const Post = require('./Post');
+const Category = require('./Category');
 
 const Localization = db.define('localization', {
   uid: {
@@ -10,7 +11,7 @@ const Localization = db.define('localization', {
   },
   name: {
     type: Sequelize.DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   geometry: {
     type: Sequelize.DataTypes.GEOMETRY('POINT'),
@@ -24,5 +25,7 @@ const Localization = db.define('localization', {
 
 Localization.hasMany(Post);
 Post.belongsTo(Localization);
+Localization.belongsTo(Category);
+Category.hasMany(Localization);
 
 module.exports = Localization;

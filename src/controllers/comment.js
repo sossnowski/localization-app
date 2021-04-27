@@ -1,10 +1,15 @@
 const Comment = require('../models/Comment');
+const Like = require('../models/Like');
+const User = require('../models/User');
 const CustomError = require('../helpers/error');
 const { postExists } = require('../services/post');
 const { isUserCommentOwner } = require('../services/comment');
 
 module.exports.getPostComments = async (postUid) => {
-  const comments = await Comment.findAll({ where: { postUid } });
+  const comments = await Comment.findAll({
+    where: { postUid },
+    include: [{ model: User, attributes: ['username', 'uid'] }, Like],
+  });
 
   return comments;
 };
@@ -14,8 +19,8 @@ module.exports.add = async (commentData, userUid) => {
   const isPostExists = await postExists(postUid);
   if (!isPostExists) throw new CustomError(400, 'Bad Request');
 
-  const postToAdd = { ...commentData, userUid, postUid };
-  const comment = await Comment.create(postToAdd);
+  const commentToAdd = { ...commentData, userUid };
+  const comment = await Comment.create(commentToAdd);
 
   return comment;
 };
@@ -38,4 +43,11 @@ module.exports.deleteByUid = async (commentUid, userUid) => {
   await Comment.destroy({
     where: { uid: commentUid },
   });
+};
+
+module.exports.getLikes = async (commentUid) => {
+  console.log(commentUid);
+  const likes = await Like.findAll({ where: { commentUid } });
+
+  return likes;
 };

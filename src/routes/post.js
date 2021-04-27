@@ -5,12 +5,16 @@ const {
   getByCategory,
   getAll,
   getByLocalization,
+  getFromLocalizations,
   add,
   update,
   getByUid,
   deleteByUid,
+  addToLocalization,
 } = require('../controllers/post');
+const { fileUploader } = require('../services/post');
 const { auth } = require('../services/auth');
+const { emitPostEvent } = require('../services/socket/post');
 
 router.get('/', async (req, res, next) => {
   try {
@@ -44,6 +48,16 @@ router.get('/localization/:uid', async (req, res, next) => {
   }
 });
 
+router.get('/localizations/uids', async (req, res, next) => {
+  try {
+    const posts = await getFromLocalizations(req.query.uids);
+
+    res.status(200).json(posts);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.get('/category/:category', async (req, res, next) => {
   const { category } = req.params;
   try {
@@ -57,9 +71,20 @@ router.get('/category/:category', async (req, res, next) => {
   }
 });
 
-router.post('/', auth, async (req, res, next) => {
+router.post('/', auth, fileUploader, async (req, res, next) => {
   try {
-    const post = await add(req.body, req.data.uid);
+    const post = await add(req.body, req.files, req.data.uid);
+
+    res.status(201).json(post);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post('/localization', auth, fileUploader, async (req, res, next) => {
+  try {
+    const post = await addToLocalization(req.body, req.files, req.data.uid);
+    await emitPostEvent(req.app.get('io'), post);
 
     res.status(201).json(post);
   } catch (error) {

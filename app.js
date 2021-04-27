@@ -12,10 +12,8 @@ const likeRoutes = require('./src/routes/like');
 const initRoutes = require('./src/routes/init');
 const commentRoutes = require('./src/routes/comment');
 const localizationRoutes = require('./src/routes/localization');
-
-// db.authenticate()
-//   .then(console.log('connected'))
-//   .catch((error) => throw error);
+const categoryRoutes = require('./src/routes/category');
+const notificationRoutes = require('./src/routes/notification');
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -28,18 +26,20 @@ app.use((req, res, next) => {
     'Origin, X-Requested-With, Content-Type, Accept, Authorization'
   );
   if (req.method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Methods', 'GET, POST');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
     return res.status(200).json({});
   }
   next();
 });
-
+app.use('/pictures', express.static('pictures'));
 app.use('/init', initRoutes);
 app.use('/user', userRoutes);
 app.use('/post', postRoutes);
 app.use('/like', likeRoutes);
 app.use('/comment', commentRoutes);
 app.use('/localization', localizationRoutes);
+app.use('/category', categoryRoutes);
+app.use('/notification', notificationRoutes);
 
 app.use((req, res, next) => {
   const error = new Error('Not found');

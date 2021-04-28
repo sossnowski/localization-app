@@ -21,7 +21,10 @@ module.exports.getAll = async () => {
 };
 
 module.exports.getByUid = async (uid) => {
-  const post = await Post.findOne({ where: { uid } });
+  const post = await Post.findOne({
+    where: { uid },
+    include: [Comment, Like, Localization, User, Photo],
+  });
 
   return post;
 };

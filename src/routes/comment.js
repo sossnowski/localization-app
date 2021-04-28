@@ -8,12 +8,23 @@ const {
   update,
   deleteByUid,
   getLikes,
+  getPostByComment,
 } = require('../controllers/comment');
 const { emitCommentEvent } = require('../services/socket/comment');
 
 router.get('/:postUid', auth, async (req, res, next) => {
   try {
     const comments = await getPostComments(req.params.postUid);
+
+    res.status(200).json(comments);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/withPostData/:commentUid', auth, async (req, res, next) => {
+  try {
+    const comments = await getPostByComment(req.params.commentUid);
 
     res.status(200).json(comments);
   } catch (error) {

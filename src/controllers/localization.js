@@ -5,7 +5,10 @@ module.exports.getAll = async () => Localization.findAll({});
 
 module.exports.get = async (uid) => Localization.findOne({ where: { uid } });
 
-module.exports.add = async (data) => Localization.create(data);
+module.exports.add = async (data) => {
+  data.city = data.city.toLowerCase();
+  Localization.create(data);
+};
 
 module.exports.getFromArea = async (points) => {
   console.log(points);
@@ -27,3 +30,6 @@ module.exports.getFromArea = async (points) => {
     where: contains,
   });
 };
+
+module.exports.getAllGroupedByPlace = () =>
+  Localization.findAll({ group: 'city' });

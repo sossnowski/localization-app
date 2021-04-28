@@ -6,12 +6,23 @@ const {
   add,
   get,
   getFromArea,
+  getAllGroupedByPlace,
 } = require('../controllers/localization');
 const { auth } = require('../services/auth');
 
 router.get('/', auth, async (req, res, next) => {
   try {
     const localizations = await getAll();
+
+    res.status(200).json(localizations);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/groupedByPlace', async (req, res, next) => {
+  try {
+    const localizations = await getAllGroupedByPlace();
 
     res.status(200).json(localizations);
   } catch (error) {

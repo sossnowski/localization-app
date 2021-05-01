@@ -14,10 +14,12 @@ module.exports.postLike = async (data, from, to) => {
 
 module.exports.postLikeUpdate = async (data) => {
   const notification = await Notification.findOne({
-    where: { text: `postUid:${data.postUid}` },
+    where: { text: `postUid:${data.postUid}`, userUid: data.actionUser },
   });
   if (!notification) return null;
   notification.isUpVote = data.isUpVote;
+  notification.new = true;
+  notification.save();
 
   return notification;
 };
@@ -37,10 +39,12 @@ module.exports.commentLike = async (data, from, to) => {
 module.exports.commentLikeUpdate = async (data) => {
   console.log(data);
   const notification = await Notification.findOne({
-    where: { text: `commentUid:${data.commentUid}` },
+    where: { text: `commentUid:${data.commentUid}`, userUid: data.actionUser },
   });
   if (!notification) return null;
   notification.isUpVote = data.isUpVote;
+  notification.new = true;
+  notification.save();
 
   return notification;
 };

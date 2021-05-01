@@ -11,6 +11,8 @@ const {
   getPostByComment,
 } = require('../controllers/comment');
 const { emitCommentEvent } = require('../services/socket/comment');
+const validationRules = require('../validation/user');
+const validate = require('../validation/main');
 
 router.get('/:postUid', auth, async (req, res, next) => {
   try {
@@ -32,7 +34,7 @@ router.get('/withPostData/:commentUid', auth, async (req, res, next) => {
   }
 });
 
-router.post('/', auth, async (req, res, next) => {
+router.post('/', auth, validate(validationRules), async (req, res, next) => {
   try {
     const comment = await add(req.body, req.data.uid);
     await emitCommentEvent(req.app.get('io'), {
@@ -47,7 +49,7 @@ router.post('/', auth, async (req, res, next) => {
   }
 });
 
-router.patch('/', auth, async (req, res, next) => {
+router.patch('/', auth, validate(validationRules), async (req, res, next) => {
   try {
     const post = await update(req.body, req.data.uid);
 

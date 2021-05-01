@@ -16,9 +16,11 @@ module.exports.emitPostLikeUpdateEvent = async (io, data) => {
   const notification = await postLikeUpdate({
     isUpVote: data.isUpVote,
     postUid: data.postUid,
+    actionUser: data.actionUser.uid,
   });
 
-  io.to(personGotLike.userUid).emit('notification', notification);
+  if (personGotLike.userUid !== data.actionUser.uid)
+    io.to(personGotLike.userUid).emit('notification', notification);
 
   io.sockets.in(`Loc_${data.localizationUid}`).emit('postLikeUpdate', {
     userUid: data.actionUser.uid,
@@ -42,8 +44,8 @@ module.exports.emitPostLikeEvent = async (io, data) => {
     data.actionUser.uid,
     personGotLike.userUid
   );
-
-  io.to(personGotLike.userUid).emit('notification', notification);
+  if (personGotLike.userUid !== data.actionUser.uid)
+    io.to(personGotLike.userUid).emit('notification', notification);
 
   io.sockets.in(`Loc_${data.localizationUid}`).emit('postLike', data.like);
 };
@@ -57,11 +59,11 @@ module.exports.emitCommentLikeUpdateEvent = async (io, data) => {
   const notification = await commentLikeUpdate({
     isUpVote: data.isUpVote,
     commentUid: comment.uid,
+    actionUser: data.actionUser.uid,
   });
 
-  console.log(comment.userUid);
-  console.log(notification);
-  io.to(comment.userUid).emit('notification', notification);
+  if (comment.userUid !== data.actionUser.uid)
+    io.to(comment.userUid).emit('notification', notification);
 
   io.sockets.in(`Loc_${data.localizationUid}`).emit('commentLikeUpdate', {
     userUid: data.actionUser.uid,
@@ -87,7 +89,8 @@ module.exports.emitCommentLikeEvent = async (io, data) => {
     comment.userUid
   );
 
-  io.to(comment.userUid).emit('notification', notification);
+  if (comment.userUid !== data.actionUser.uid)
+    io.to(comment.userUid).emit('notification', notification);
 
   io.sockets.in(`Loc_${data.localizationUid}`).emit('commentLike', {
     like: data.like,

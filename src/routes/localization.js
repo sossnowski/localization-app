@@ -9,6 +9,8 @@ const {
   getAllGroupedByPlace,
 } = require('../controllers/localization');
 const { auth } = require('../services/auth');
+const validationRules = require('../validation/localization');
+const validate = require('../validation/main');
 
 router.get('/', auth, async (req, res, next) => {
   try {
@@ -50,7 +52,7 @@ router.get('/:a/:b/:c/:d/:e', auth, async (req, res, next) => {
   }
 });
 
-router.post('/', auth, async (req, res, next) => {
+router.post('/', auth, validate(validationRules), async (req, res, next) => {
   try {
     const localization = await add(req.body);
 

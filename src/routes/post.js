@@ -15,6 +15,8 @@ const {
 const { fileUploader } = require('../services/post');
 const { auth } = require('../services/auth');
 const { emitPostEvent } = require('../services/socket/post');
+const validationRules = require('../validation/post');
+const validate = require('../validation/main');
 
 router.get('/', async (req, res, next) => {
   try {
@@ -71,36 +73,53 @@ router.get('/category/:category', async (req, res, next) => {
   }
 });
 
-router.post('/', auth, fileUploader, async (req, res, next) => {
-  try {
-    const post = await add(req.body, req.files, req.data.uid);
+router.post(
+  '/',
+  auth,
+  validate(validationRules.create),
+  fileUploader,
+  async (req, res, next) => {
+    try {
+      const post = await add(req.body, req.files, req.data.uid);
 
-    res.status(201).json(post);
-  } catch (error) {
-    next(error);
+      res.status(201).json(post);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
-router.post('/localization', auth, fileUploader, async (req, res, next) => {
-  try {
-    const post = await addToLocalization(req.body, req.files, req.data.uid);
-    await emitPostEvent(req.app.get('io'), post);
+router.post(
+  '/localization',
+  auth,
+  validate(validationRules.create),
+  fileUploader,
+  async (req, res, next) => {
+    try {
+      const post = await addToLocalization(req.body, req.files, req.data.uid);
+      await emitPostEvent(req.app.get('io'), post);
 
-    res.status(201).json(post);
-  } catch (error) {
-    next(error);
+      res.status(201).json(post);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
-router.patch('/', auth, async (req, res, next) => {
-  try {
-    const post = await update(req.body, req.data.uid);
+router.patch(
+  '/',
+  auth,
+  validate(validationRules.update),
+  async (req, res, next) => {
+    try {
+      const post = await update(req.body, req.data.uid);
 
-    res.status(200).json(post);
-  } catch (error) {
-    next(error);
+      res.status(200).json(post);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 router.delete('/:uid', auth, async (req, res, next) => {
   try {

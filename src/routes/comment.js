@@ -11,7 +11,7 @@ const {
   getPostByComment,
 } = require('../controllers/comment');
 const { emitCommentEvent } = require('../services/socket/comment');
-const validationRules = require('../validation/user');
+const validationRules = require('../validation/comment');
 const validate = require('../validation/main');
 
 router.get('/:postUid', auth, async (req, res, next) => {

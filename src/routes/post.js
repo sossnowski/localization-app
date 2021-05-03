@@ -76,9 +76,10 @@ router.get('/category/:category', async (req, res, next) => {
 router.post(
   '/',
   auth,
-  validate(validationRules.create),
   fileUploader,
+  validate(validationRules.createByLocalization),
   async (req, res, next) => {
+    console.log(req.body);
     try {
       const post = await add(req.body, req.files, req.data.uid);
 
@@ -92,8 +93,8 @@ router.post(
 router.post(
   '/localization',
   auth,
-  validate(validationRules.create),
   fileUploader,
+  validate(validationRules.create),
   async (req, res, next) => {
     try {
       const post = await addToLocalization(req.body, req.files, req.data.uid);

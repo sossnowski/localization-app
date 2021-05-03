@@ -6,8 +6,6 @@ const {
   setNotificationAsSeen,
 } = require('../controllers/notification');
 const { auth } = require('../services/auth');
-const validationRules = require('../validation/notification');
-const validate = require('../validation/main');
 
 router.get('/:offset', auth, async (req, res, next) => {
   try {
@@ -19,19 +17,14 @@ router.get('/:offset', auth, async (req, res, next) => {
   }
 });
 
-router.patch(
-  '/seen/:uid',
-  auth,
-  validate(validationRules),
-  async (req, res, next) => {
-    try {
-      await setNotificationAsSeen(req.params.uid, req.data.uid);
+router.patch('/seen/:uid', auth, async (req, res, next) => {
+  try {
+    await setNotificationAsSeen(req.params.uid, req.data.uid);
 
-      res.status(200).json({ message: 'saved' });
-    } catch (error) {
-      next(error);
-    }
+    res.status(200).json({ message: 'saved' });
+  } catch (error) {
+    next(error);
   }
-);
+});
 
 module.exports = router;

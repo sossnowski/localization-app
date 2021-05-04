@@ -2,7 +2,6 @@ const Sequelize = require('sequelize');
 const db = require('../config/db');
 const Like = require('./Like');
 const Comment = require('./Comment');
-const Category = require('./Category');
 const Photo = require('./Photo');
 
 const Post = db.define(

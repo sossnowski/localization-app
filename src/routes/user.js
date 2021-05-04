@@ -3,18 +3,24 @@ const express = require('express');
 const router = express.Router();
 const { register, login, update } = require('../controllers/users');
 const { auth } = require('../services/auth');
+const validation = require('../validation/user');
+const validate = require('../validation/main');
 
-router.post('/register', async (req, res, next) => {
-  try {
-    await register(req.body);
+router.post(
+  '/register',
+  validate(validation.register),
+  async (req, res, next) => {
+    try {
+      await register(req.body);
 
-    res.status(201).json({ message: 'User created' });
-  } catch (error) {
-    next(error);
+      res.status(201).json({ message: 'User created' });
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
-router.post('/login', async (req, res, next) => {
+router.post('/login', validate(validation.login), async (req, res, next) => {
   try {
     const result = await login(req.body);
 
@@ -24,7 +30,7 @@ router.post('/login', async (req, res, next) => {
   }
 });
 
-router.patch('/', auth, async (req, res, next) => {
+router.patch('/', auth, validate(validation.update), async (req, res, next) => {
   try {
     const post = await update(req.body, req.data.uid);
 

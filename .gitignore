@@ -1,6 +1,6 @@
 /node_modules/
 /.env
-pictures/*
+pictures/
 !pictures/post
 pictures/post/*
 !pictures/post/.init

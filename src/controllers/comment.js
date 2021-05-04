@@ -33,6 +33,7 @@ module.exports.getPostByComment = async (commentUid) => {
       },
     ],
   });
+  if (!comment) throw new CustomError(404, 'Not found post');
 
   return comment;
 };

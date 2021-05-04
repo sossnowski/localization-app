@@ -25,6 +25,7 @@ module.exports.getByUid = async (uid) => {
     where: { uid },
     include: [Comment, Like, Localization, User, Photo],
   });
+  if (!post) throw new CustomError(404, 'Not found post');
 
   return post;
 };

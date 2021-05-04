@@ -13,14 +13,15 @@ module.exports.emitPostLikeUpdateEvent = async (io, data) => {
     attributes: ['userUid'],
   });
 
-  const notification = await postLikeUpdate({
-    isUpVote: data.isUpVote,
-    postUid: data.postUid,
-    actionUser: data.actionUser.uid,
-  });
-
-  if (personGotLike.userUid !== data.actionUser.uid)
+  if (personGotLike.userUid !== data.actionUser.uid) {
+    const notification = await postLikeUpdate({
+      isUpVote: data.isUpVote,
+      postUid: data.postUid,
+      actionUser: data.actionUser.uid,
+    });
+    console.log(notification);
     io.to(personGotLike.userUid).emit('notification', notification);
+  }
 
   io.sockets.in(`Loc_${data.localizationUid}`).emit('postLikeUpdate', {
     userUid: data.actionUser.uid,
@@ -35,17 +36,19 @@ module.exports.emitPostLikeEvent = async (io, data) => {
     attributes: ['userUid'],
   });
 
-  const notification = await postLike(
-    {
-      username: data.actionUser.username,
-      isUpVote: data.like.isUpVote,
-      postUid: data.like.postUid,
-    },
-    data.actionUser.uid,
-    personGotLike.userUid
-  );
-  if (personGotLike.userUid !== data.actionUser.uid)
+  if (personGotLike.userUid !== data.actionUser.uid) {
+    const notification = await postLike(
+      {
+        username: data.actionUser.username,
+        isUpVote: data.like.isUpVote,
+        postUid: data.like.postUid,
+      },
+      data.actionUser.uid,
+      personGotLike.userUid
+    );
+    console.log(notification);
     io.to(personGotLike.userUid).emit('notification', notification);
+  }
 
   io.sockets.in(`Loc_${data.localizationUid}`).emit('postLike', data.like);
 };
@@ -56,14 +59,14 @@ module.exports.emitCommentLikeUpdateEvent = async (io, data) => {
     include: { model: Post, attributes: ['uid', 'userUid'] },
   });
 
-  const notification = await commentLikeUpdate({
-    isUpVote: data.isUpVote,
-    commentUid: comment.uid,
-    actionUser: data.actionUser.uid,
-  });
-
-  if (comment.userUid !== data.actionUser.uid)
+  if (comment.userUid !== data.actionUser.uid) {
+    const notification = await commentLikeUpdate({
+      isUpVote: data.isUpVote,
+      commentUid: comment.uid,
+      actionUser: data.actionUser.uid,
+    });
     io.to(comment.userUid).emit('notification', notification);
+  }
 
   io.sockets.in(`Loc_${data.localizationUid}`).emit('commentLikeUpdate', {
     userUid: data.actionUser.uid,
@@ -79,18 +82,18 @@ module.exports.emitCommentLikeEvent = async (io, data) => {
     include: { model: Post, attributes: ['uid', 'userUid'] },
   });
 
-  const notification = await commentLike(
-    {
-      username: data.actionUser.username,
-      isUpVote: data.like.isUpVote,
-      commentUid: comment.uid,
-    },
-    data.actionUser.uid,
-    comment.userUid
-  );
-
-  if (comment.userUid !== data.actionUser.uid)
+  if (comment.userUid !== data.actionUser.uid) {
+    const notification = await commentLike(
+      {
+        username: data.actionUser.username,
+        isUpVote: data.like.isUpVote,
+        commentUid: comment.uid,
+      },
+      data.actionUser.uid,
+      comment.userUid
+    );
     io.to(comment.userUid).emit('notification', notification);
+  }
 
   io.sockets.in(`Loc_${data.localizationUid}`).emit('commentLike', {
     like: data.like,

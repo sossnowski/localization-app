@@ -23,7 +23,8 @@ router.get('/', async (req, res) => {
 
 router.get('/force', async (req, res) => {
   try {
-    await forceInit();
+    await db.sync({ force: true });
+    await seedCategories();
 
     res.status(200).json({
       success: true,

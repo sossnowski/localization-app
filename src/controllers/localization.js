@@ -1,5 +1,6 @@
 const Localization = require('../models/Localization');
 const sequelize = require('../config/db');
+const Category = require('../models/Category');
 
 module.exports.getAll = async () => Localization.findAll({});
 
@@ -31,5 +32,12 @@ module.exports.getFromArea = async (points) => {
   });
 };
 
-module.exports.getAllGroupedByPlace = () =>
-  Localization.findAll({ group: 'city' });
+module.exports.getAllGroupedByPlace = (categories) => {
+  console.log(categories);
+  if (!categories || !categories.length)
+    return Localization.findAll({ group: 'city' });
+  return Localization.findAll({
+    include: { model: Category, where: { name: categories } },
+    group: 'city',
+  });
+};

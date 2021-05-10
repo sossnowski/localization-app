@@ -22,21 +22,22 @@ router.get('/', auth, async (req, res, next) => {
   }
 });
 
-router.get('/groupedByPlace', async (req, res, next) => {
-  try {
-    const localizations = await getAllGroupedByPlace();
-
-    res.status(200).json(localizations);
-  } catch (error) {
-    next(error);
-  }
-});
-
 router.get('/:uid', auth, async (req, res, next) => {
   try {
     const localization = await get(req.params.uid);
 
     res.status(200).json(localization);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/groupedByPlace/categories', async (req, res, next) => {
+  try {
+    console.log(req.query.categories);
+    const localizations = await getAllGroupedByPlace(req.query.categories);
+
+    res.status(200).json(localizations);
   } catch (error) {
     next(error);
   }

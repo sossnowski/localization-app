@@ -2,10 +2,8 @@ const express = require('express');
 
 const app = express();
 const morgan = require('morgan');
-const bodyParser = require('body-parser');
 
 require('dotenv').config();
-// const db = require('./src/config/db');
 const userRoutes = require('./src/routes/user');
 const postRoutes = require('./src/routes/post');
 const likeRoutes = require('./src/routes/like');
@@ -18,8 +16,6 @@ const notificationRoutes = require('./src/routes/notification');
 app.use(morgan('dev'));
 app.use(express.urlencoded());
 app.use(express.json());
-// app.use(bodyParser.urlencoded({ extended: false }));
-// app.use(bodyParser.json());
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');

@@ -84,6 +84,7 @@ module.exports.add = async (postData, files, userUid) => {
   const localizationToAdd = {
     geometry: JSON.parse(postData.geometry),
     city: postData.city,
+    categoryUid: postData.categoryUid,
   };
 
   const result = await db.transaction(async (t) => {
@@ -99,6 +100,8 @@ module.exports.add = async (postData, files, userUid) => {
 
     delete postToAdd.city;
     delete postToAdd.geometry;
+    delete postToAdd.categoryUid;
+
     const post = await Post.create(postToAdd, { transaction: t });
 
     let savedPhoto = null;

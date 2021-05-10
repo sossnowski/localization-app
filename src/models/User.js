@@ -14,12 +14,12 @@ const User = db.define('user', {
   username: {
     type: Sequelize.DataTypes.STRING,
     allowNull: false,
-    unique: true,
+    unique: 'username',
   },
   email: {
     type: Sequelize.DataTypes.STRING,
     allowNull: false,
-    unique: true,
+    unique: 'email',
   },
   password: {
     type: Sequelize.DataTypes.STRING,

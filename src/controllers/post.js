@@ -164,11 +164,15 @@ module.exports.deleteByUid = async (postUid, userUid) => {
     include: [Photo],
   });
   if (postToRemove.photos.length) {
-    fs.unlinkSync(
-      `${path.dirname(require.main.filename)}/pictures/post/${
-        postToRemove.photos[0].filename
-      }`
-    );
+    try {
+      fs.unlinkSync(
+        `${path.dirname(require.main.filename)}/pictures/post/${
+          postToRemove.photos[0].filename
+        }`
+      );
+    } catch (err) {
+      console.log('file not exists');
+    }
   }
 
   await Post.destroy({

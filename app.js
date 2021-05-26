@@ -1,4 +1,5 @@
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 const morgan = require('morgan');
@@ -13,6 +14,12 @@ const localizationRoutes = require('./src/routes/localization');
 const categoryRoutes = require('./src/routes/category');
 const notificationRoutes = require('./src/routes/notification');
 
+const limiter = rateLimit({
+  windowMs: 5 * 1000, // 15 minutes
+  max: 10, // limit each IP to 100 requests per windowMs
+});
+
+app.use(limiter);
 app.use(morgan('dev'));
 app.use(express.urlencoded());
 app.use(express.json());

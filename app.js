@@ -15,7 +15,7 @@ const categoryRoutes = require('./src/routes/category');
 const notificationRoutes = require('./src/routes/notification');
 
 const limiter = rateLimit({
-  windowMs: 5 * 1000, // 15 minutes
+  windowMs: 5 * 1000, // ms
   max: 10, // limit each IP to 100 requests per windowMs
 });
 

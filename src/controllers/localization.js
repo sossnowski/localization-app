@@ -33,7 +33,6 @@ module.exports.getFromArea = async (points) => {
 };
 
 module.exports.getAllGroupedByPlace = (categories) => {
-  console.log(categories);
   if (!categories || !categories.length)
     return Localization.findAll({ group: 'city' });
   return Localization.findAll({

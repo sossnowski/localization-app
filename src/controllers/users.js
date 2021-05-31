@@ -53,7 +53,7 @@ module.exports.login = async (userLoginData) => {
 };
 
 module.exports.update = async (userData, uid) => {
-  if (userData.password !== '') {
+  if (userData.password && userData.password !== '') {
     const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
     userData.password = hashedPassword;
   } else delete userData.password;

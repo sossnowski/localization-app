@@ -13,6 +13,6 @@ module.exports.login = [
 
 module.exports.update = [
   check('email').normalizeEmail().isEmail(),
-  check('password').isString().notEmpty(),
+  check('password').isString().notEmpty().optional(),
   check('username').isString().notEmpty(),
 ];

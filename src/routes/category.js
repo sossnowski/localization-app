@@ -1,9 +1,10 @@
 const express = require('express');
+const { auth } = require('../services/auth');
 
 const router = express.Router();
 const { getAll } = require('../controllers/category');
 
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
   try {
     const categories = await getAll();
 

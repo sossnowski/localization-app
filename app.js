@@ -1,7 +1,11 @@
 const express = require('express');
+const rateLimit = require('express-rate-limit');
+const compression = require('compression');
 
 const app = express();
 const morgan = require('morgan');
+
+app.use(compression());
 
 require('dotenv').config();
 const userRoutes = require('./src/routes/user');
@@ -13,7 +17,13 @@ const localizationRoutes = require('./src/routes/localization');
 const categoryRoutes = require('./src/routes/category');
 const notificationRoutes = require('./src/routes/notification');
 
-app.use(morgan('dev'));
+const limiter = rateLimit({
+  windowMs: 5 * 1000, // ms
+  max: 10, // limit each IP to 100 requests per windowMs
+});
+
+app.use(limiter);
+// app.use(morgan('dev'));
 app.use(express.urlencoded());
 app.use(express.json());
 

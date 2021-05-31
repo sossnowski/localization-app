@@ -32,9 +32,8 @@ router.get('/:uid', auth, async (req, res, next) => {
   }
 });
 
-router.get('/groupedByPlace/categories', async (req, res, next) => {
+router.get('/groupedByPlace/categories', auth, async (req, res, next) => {
   try {
-    console.log(req.query.categories);
     const localizations = await getAllGroupedByPlace(req.query.categories);
 
     res.status(200).json(localizations);

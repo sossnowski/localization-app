@@ -38,7 +38,8 @@ module.exports.login = async (userLoginData) => {
     user.password
   );
 
-  if (!authorized) throw new CustomError(401, 'Invalid credentials');
+  if (!authorized || user.isConfirmed === false)
+    throw new CustomError(401, 'Invalid credentials');
 
   return {
     token: generateToken({ username: user.username, uid: user.uid }),

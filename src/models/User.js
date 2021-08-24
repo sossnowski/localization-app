@@ -33,6 +33,10 @@ const User = db.define('user', {
     type: Sequelize.DataTypes.BOOLEAN,
     defaultValue: false,
   },
+  isConfirmed: {
+    type: Sequelize.DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
 });
 
 User.hasMany(Post);

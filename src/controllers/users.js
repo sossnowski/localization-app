@@ -2,7 +2,7 @@ const { Op } = require('sequelize');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const CustomError = require('../helpers/error');
-const { generateToken } = require('../services/auth');
+const { generateToken, confirmationAuth } = require('../services/auth');
 
 const saltRounds = 12;
 
@@ -61,4 +61,15 @@ module.exports.update = async (userData, uid) => {
   await User.update(userData, { where: { uid } });
 
   return userData;
+};
+
+module.exports.confirm = async (confirmationToken) => {
+  const decodedData = confirmationAuth(confirmationToken);
+  if (decodedData) {
+    await User.update(
+      { isConfirmed: true },
+      { where: { email: decodedData.email } }
+    );
+  }
+  throw new CustomError(400, 'Bad Request');
 };

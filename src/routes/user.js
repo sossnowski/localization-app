@@ -1,7 +1,7 @@
 const express = require('express');
 
 const router = express.Router();
-const { register, login, update } = require('../controllers/users');
+const { register, login, update, confirm } = require('../controllers/users');
 const { auth } = require('../services/auth');
 const validation = require('../validation/user');
 const validate = require('../validation/main');
@@ -35,6 +35,16 @@ router.patch('/', auth, validate(validation.update), async (req, res, next) => {
     const post = await update(req.body, req.data.uid);
 
     res.status(200).json(post);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/confirm', async (req, res, next) => {
+  try {
+    await confirm(req.params.token);
+
+    res.status(200).json({ message: 'Account confirmed' });
   } catch (error) {
     next(error);
   }

@@ -3,6 +3,9 @@ const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const CustomError = require('../helpers/error');
 const { generateToken, confirmationAuth } = require('../services/auth');
+const { sendEmail } = require('../services/email');
+const { welcomeMail } = require('../consts/emailSubjects');
+const { welcomeMail: welcomeMailBody } = require('../consts/emailBodies');
 
 const saltRounds = 12;
 
@@ -20,6 +23,11 @@ module.exports.register = async (user) => {
   if (hashedPassword) {
     const newUser = { ...user, password: hashedPassword };
     await User.create(newUser);
+    await sendEmail(
+      newUser.email,
+      welcomeMail,
+      welcomeMailBody({ email: newUser.email })
+    );
   }
 };
 
@@ -70,6 +78,5 @@ module.exports.confirm = async (confirmationToken) => {
       { isConfirmed: true },
       { where: { email: decodedData.email } }
     );
-  }
-  throw new CustomError(400, 'Bad Request');
+  } else throw new CustomError(400, 'Bad Request');
 };

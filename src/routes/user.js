@@ -40,7 +40,7 @@ router.patch('/', auth, validate(validation.update), async (req, res, next) => {
   }
 });
 
-router.get('/confirm', async (req, res, next) => {
+router.get('/confirm/:token', async (req, res, next) => {
   try {
     await confirm(req.params.token);
 

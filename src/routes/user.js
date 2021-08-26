@@ -1,7 +1,14 @@
 const express = require('express');
 
 const router = express.Router();
-const { register, login, update, confirm } = require('../controllers/users');
+const {
+  register,
+  login,
+  update,
+  confirm,
+  resetPassword,
+  setNewPassword,
+} = require('../controllers/users');
 const { auth } = require('../services/auth');
 const validation = require('../validation/user');
 const validate = require('../validation/main');
@@ -49,5 +56,33 @@ router.get('/confirm/:token', async (req, res, next) => {
     next(error);
   }
 });
+
+router.get(
+  '/resetPassword/:email',
+  validate(validation.email),
+  async (req, res, next) => {
+    try {
+      await resetPassword(req.params.email);
+
+      res.status(200).json({ message: 'Email sended' });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.patch(
+  '/setNewPassword',
+  validate(validation.setNewPassword),
+  async (req, res, next) => {
+    try {
+      await setNewPassword(req.body);
+
+      res.status(200).json({ message: 'Password changed' });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 module.exports = router;

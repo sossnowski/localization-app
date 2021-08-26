@@ -4,10 +4,12 @@ const User = require('../models/User');
 const CustomError = require('../helpers/error');
 const { generateToken, confirmationAuth } = require('../services/auth');
 const { sendEmail } = require('../services/email');
-const { welcomeMail } = require('../consts/emailSubjects');
-const { welcomeMail: welcomeMailBody } = require('../consts/emailBodies');
-
-const saltRounds = 12;
+const { welcomeMail, resetPasswordMail } = require('../consts/emailSubjects');
+const {
+  welcomeMailBody,
+  resetPasswordMailBody,
+} = require('../consts/emailBodies');
+const { generatePassword } = require('../services/user');
 
 module.exports.register = async (user) => {
   const registeredUser = await User.findOne({
@@ -18,7 +20,7 @@ module.exports.register = async (user) => {
 
   if (registeredUser) throw new CustomError(400, 'User exist');
 
-  const hashedPassword = await bcrypt.hash(user.password, saltRounds);
+  const hashedPassword = await generatePassword(user.password);
 
   if (hashedPassword) {
     const newUser = { ...user, password: hashedPassword };
@@ -63,7 +65,7 @@ module.exports.login = async (userLoginData) => {
 
 module.exports.update = async (userData, uid) => {
   if (userData.password && userData.password !== '') {
-    const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
+    const hashedPassword = await generatePassword(userData.password);
     userData.password = hashedPassword;
   } else delete userData.password;
   await User.update(userData, { where: { uid } });
@@ -79,4 +81,18 @@ module.exports.confirm = async (confirmationToken) => {
       { where: { email: decodedData.email } }
     );
   } else throw new CustomError(400, 'Bad Request');
+};
+
+module.exports.resetPassword = async (email) => {
+  const user = await User.findOne({ where: { email } });
+  if (!user) throw new CustomError(400, 'Bad Request');
+  await sendEmail(email, resetPasswordMail, resetPasswordMailBody({ email }));
+};
+
+module.exports.setNewPassword = async ({ token, password }) => {
+  const { email } = confirmationAuth(token);
+  const hashedPassword = await generatePassword(password);
+  if (email)
+    await User.update({ password: hashedPassword }, { where: { email } });
+  else throw new CustomError(400, 'Bad Request');
 };

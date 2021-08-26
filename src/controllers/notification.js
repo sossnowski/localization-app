@@ -1,7 +1,6 @@
 const CustomError = require('../helpers/error');
 const Notification = require('../models/Notification');
-
-const numberPerPage = 3;
+require('dotenv').config();
 
 module.exports.getAll = (offset, userUid) => {
   const parsed = parseInt(offset);
@@ -9,14 +8,17 @@ module.exports.getAll = (offset, userUid) => {
     return Notification.findAll({
       where: { targetUid: userUid },
       order: [['updatedAt', 'desc']],
+      group: 'text',
       offset: parsed,
-      limit: numberPerPage,
+      limit: parseInt(process.env.NOTIFICATIONS_PER_PAGE),
     });
   }
+
   return Notification.findAll({
     where: { targetUid: userUid },
     order: [['createdAt', 'desc']],
-    limit: numberPerPage,
+    group: 'text',
+    limit: parseInt(process.env.NOTIFICATIONS_PER_PAGE),
   });
 };
 

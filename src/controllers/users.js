@@ -24,12 +24,12 @@ module.exports.register = async (user) => {
 
   if (hashedPassword) {
     const newUser = { ...user, password: hashedPassword };
-    await User.create(newUser);
     await sendEmail(
       newUser.email,
       welcomeMail,
       welcomeMailBody({ email: newUser.email })
     );
+    await User.create(newUser);
   }
 };
 

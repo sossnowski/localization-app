@@ -42,7 +42,7 @@ router.get('/groupedByPlace/categories', auth, async (req, res, next) => {
   }
 });
 
-router.get('/:a/:b/:c/:d/:e', auth, async (req, res, next) => {
+router.get('/extent/:a/:b/:c/:d/:e', auth, async (req, res, next) => {
   try {
     const localization = await getFromArea(req.params);
 

@@ -88,8 +88,8 @@ router.patch(
 
 router.patch(
   '/setUserConfiguration/',
-  validate(validation.setConfiguration),
   auth,
+  validate(validation.setConfiguration),
   async (req, res, next) => {
     try {
       await setConfiguration(req.body.configuration, req.data.uid);

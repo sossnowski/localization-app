@@ -79,7 +79,6 @@ router.post(
   fileUploader,
   validate(validationRules.createByLocalization),
   async (req, res, next) => {
-    console.log(req.body);
     try {
       const post = await add(req.body, req.files, req.data.uid);
 

@@ -8,6 +8,7 @@ const {
   confirm,
   resetPassword,
   setNewPassword,
+  setConfiguration,
 } = require('../controllers/users');
 const { auth } = require('../services/auth');
 const validation = require('../validation/user');
@@ -79,6 +80,21 @@ router.patch(
       await setNewPassword(req.body);
 
       res.status(200).json({ message: 'Password changed' });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.patch(
+  '/setUserConfiguration/',
+  validate(validation.setConfiguration),
+  auth,
+  async (req, res, next) => {
+    try {
+      await setConfiguration(req.body.configuration, req.data.uid);
+
+      res.status(200).json({ message: 'Configuration saved' });
     } catch (error) {
       next(error);
     }

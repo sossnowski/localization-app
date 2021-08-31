@@ -37,6 +37,10 @@ const User = db.define('user', {
     type: Sequelize.DataTypes.BOOLEAN,
     defaultValue: false,
   },
+  configuration: {
+    type: Sequelize.DataTypes.STRING,
+    allowNull: true,
+  },
 });
 
 User.hasMany(Post);

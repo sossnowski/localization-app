@@ -59,6 +59,7 @@ module.exports.login = async (userLoginData) => {
       email: user.email,
       isAdmin: user.isAdmin,
       isSuperAdmin: user.isSuperAdmin,
+      configuration: user.configuration,
     },
   };
 };
@@ -96,3 +97,6 @@ module.exports.setNewPassword = async ({ token, password }) => {
     await User.update({ password: hashedPassword }, { where: { email } });
   else throw new CustomError(400, 'Bad Request');
 };
+
+module.exports.setConfiguration = async (configuration, uid) =>
+  User.update({ configuration }, { where: { uid } });

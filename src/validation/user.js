@@ -22,4 +22,8 @@ module.exports.setNewPassword = [
   check('password').isString().notEmpty().exists(),
 ];
 
+module.exports.setConfiguration = [
+  check('configuration').isString().notEmpty().exists(),
+];
+
 module.exports.email = [check('email').normalizeEmail().isEmail().exists()];

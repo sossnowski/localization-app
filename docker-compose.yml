@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  backend:
+    build: .
+    container_name: backend
+    hostname: backend
+    # networks:
+    #   - spotfinder
+    restart: unless-stopped
+    volumes:
+      - ./pictures:/spotfinder/pictures
+    ports:
+      - "3005:3005"
+      - "3306:3306"
+
+# networks:
+#   spotfinder:
+#     external: true

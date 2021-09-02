@@ -38,7 +38,8 @@ const upload = multer({
 });
 const cpUpload = upload.fields([
   { name: 'profile', maxCount: 1 },
-  { name: 'post', maxCount: 1 },
+  { name: 'image', maxCount: 1 },
+  { name: 'video', maxCount: 1 },
 ]);
 
 module.exports.fileUploader = cpUpload;

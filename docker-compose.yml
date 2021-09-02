@@ -14,10 +14,6 @@ services:
       - "traefik.http.routers.backend.entrypoints=websecure"
       - "traefik.http.routers.backend.tls.certresolver=letsencryptresolver"
       - "traefik.http.services.backend.loadbalancer.server.port=3005"
-      - "traefik.http.routers.socket-io.rule=Host(`api.splendorwrld.com`)"
-      - "traefik.http.routers.socket-io.entrypoints=websecure"
-      - "traefik.http.routers.socket-io.tls.certresolver=letsencryptresolver"
-      - "traefik.http.services.socket-io.loadbalancer.server.port=3005"
 
 
     volumes:

@@ -20,7 +20,7 @@ module.exports.postExists = async (uid) => {
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
-    console.log(req.files);
+    console.log(file, 'oo');
     cb(null, `./pictures/${file.fieldname}/`);
   },
   filename(req, file, cb) {

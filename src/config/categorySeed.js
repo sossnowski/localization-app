@@ -2,13 +2,13 @@ const Category = require('../models/Category');
 
 const categories = [
   {
-    name: 'melanz',
+    name: 'party',
   },
   {
-    name: 'deska',
+    name: 'skateboard',
   },
   {
-    name: 'szamka',
+    name: 'food',
   },
   {
     name: 'chillout',
@@ -17,7 +17,7 @@ const categories = [
     name: 'sport',
   },
   {
-    name: 'inne',
+    name: 'other',
   },
 ];
 

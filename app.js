@@ -18,8 +18,8 @@ const notificationRoutes = require('./src/routes/notification');
 const { seedCategories } = require('./src/config/categorySeed');
 
 const limiter = rateLimit({
-  windowMs: 5 * 1000, // ms
-  max: 10, // limit each IP to 100 requests per windowMs
+  windowMs: 1 * 1000, // ms
+  max: 20, // limit each IP to 100 requests per windowMs
 });
 
 app.use(limiter);

@@ -46,15 +46,13 @@ module.exports.getByLocalization = async (uid) => {
   return posts;
 };
 
-module.exports.getFromLocalizations = async (localizations) => {
+module.exports.getFromLocalizations = async (localization) => {
   const posts = await Post.findAll({
     include: [
       {
         model: Localization,
         where: {
-          uid: {
-            [Op.or]: localizations,
-          },
+          uid: localization,
         },
       },
       { model: User, attributes: ['username', 'uid'] },

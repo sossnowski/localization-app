@@ -11,8 +11,7 @@ module.exports.add = async (data) => {
   Localization.create(data);
 };
 
-module.exports.getFromArea = async (points) => {
-  console.log(points);
+module.exports.getFromArea = async (points, categories) => {
   const { a, b, c, d, e } = points;
   const contains = sequelize.fn(
     'ST_CONTAINS',
@@ -29,6 +28,12 @@ module.exports.getFromArea = async (points) => {
 
   return Localization.findAll({
     where: contains,
+    include: {
+      model: Category,
+      where: {
+        name: categories,
+      },
+    },
   });
 };
 

@@ -44,7 +44,7 @@ router.get('/groupedByPlace/categories', auth, async (req, res, next) => {
 
 router.get('/extent/:a/:b/:c/:d/:e', auth, async (req, res, next) => {
   try {
-    const localization = await getFromArea(req.params);
+    const localization = await getFromArea(req.params, req.query.categories);
 
     res.status(200).json(localization);
   } catch (error) {

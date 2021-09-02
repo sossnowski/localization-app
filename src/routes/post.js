@@ -50,9 +50,9 @@ router.get('/localization/:uid', async (req, res, next) => {
   }
 });
 
-router.get('/localizations/uids', async (req, res, next) => {
+router.get('/localizations/:uid', async (req, res, next) => {
   try {
-    const posts = await getFromLocalizations(req.query.uids);
+    const posts = await getFromLocalizations(req.params.uid);
 
     res.status(200).json(posts);
   } catch (error) {

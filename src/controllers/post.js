@@ -92,9 +92,10 @@ module.exports.add = async (postData, files, userUid) => {
     const post = await Post.create(postToAdd, { transaction: t });
 
     let savedPhoto = null;
-    if (files.post) {
+    if (files.image || files.video) {
+      const fileToSave = files.image || files.video;
       const photo = await Photo.create(
-        { filename: files.post[0].filename, postUid: post.uid },
+        { filename: fileToSave[0].filename, postUid: post.uid },
         { transaction: t }
       );
       savedPhoto = photo;
@@ -116,7 +117,6 @@ module.exports.addToLocalization = async (postData, files, userUid) => {
       { ...postData, userUid },
       { transaction: t }
     );
-    console.log(files);
     let savedPhoto = null;
     if (files.image || files.video) {
       const fileToSave = files.image || files.video;

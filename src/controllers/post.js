@@ -118,7 +118,7 @@ module.exports.addToLocalization = async (postData, files, userUid) => {
     );
     console.log(files);
     let savedPhoto = null;
-    if (files.post || files.video) {
+    if (files.image || files.video) {
       const photo = await Photo.create(
         { filename: files.post[0].filename, postUid: post.uid },
         { transaction: t }

@@ -13,7 +13,7 @@ services:
       - "traefik.http.routers.srtm-service.rule=Host(`api.splendorwrld.com`)"
       - "traefik.http.routers.srtm-service.entrypoints=websecure"
       - "traefik.http.routers.srtm-service.tls.certresolver=letsencryptresolver"
-      - "traefik.http.services.srtm-service.loadbalancer.server.port=3012"
+      - "traefik.http.services.srtm-service.loadbalancer.server.port=3005"
 
     volumes:
       - ./pictures:/spotfinder/pictures

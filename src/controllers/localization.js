@@ -1,6 +1,10 @@
 const Localization = require('../models/Localization');
 const sequelize = require('../config/db');
 const Category = require('../models/Category');
+const Post = require('../models/Post');
+const {
+  filterLocalizationsByCoordinates,
+} = require('../services/localization');
 
 module.exports.getAll = async () => Localization.findAll({});
 
@@ -26,14 +30,35 @@ module.exports.getFromArea = async (points, categories) => {
     sequelize.col('geometry')
   );
 
-  return Localization.findAll({
-    where: contains,
-    include: {
-      model: Category,
-      where: {
-        name: categories,
-      },
+  const allExtentLocalizations = await Localization.findAll({
+    raw: true,
+    attributes: {
+      include: [
+        [sequelize.fn('COUNT', sequelize.col('posts.uid')), 'postCount'],
+      ],
     },
+    where: contains,
+    include: [
+      {
+        model: Category,
+        where: {
+          name: categories,
+        },
+      },
+      {
+        model: Post,
+        attributes: [],
+      },
+    ],
+    group: ['city'],
+    order: [[sequelize.literal('postCount'), 'DESC']],
+  });
+
+  return filterLocalizationsByCoordinates(allExtentLocalizations, {
+    a,
+    b,
+    c,
+    d,
   });
 };
 

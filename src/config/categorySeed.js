@@ -2,28 +2,22 @@ const Category = require('../models/Category');
 
 const categories = [
   {
-    name: 'impreza',
+    name: 'party',
   },
   {
-    name: 'rekreacja',
+    name: 'skateboard',
+  },
+  {
+    name: 'food',
+  },
+  {
+    name: 'chillout',
   },
   {
     name: 'sport',
   },
   {
-    name: 'hobby',
-  },
-  {
-    name: 'odpoczynek',
-  },
-  {
-    name: 'zwiedzanie',
-  },
-  {
-    name: 'kultura',
-  },
-  {
-    name: 'inne',
+    name: 'other',
   },
 ];
 

@@ -16,3 +16,14 @@ module.exports.update = [
   check('password').isString().notEmpty().optional(),
   check('username').isString().notEmpty(),
 ];
+
+module.exports.setNewPassword = [
+  check('token').isString().notEmpty().exists(),
+  check('password').isString().notEmpty().exists(),
+];
+
+module.exports.setConfiguration = [
+  check('configuration').isString().notEmpty().exists(),
+];
+
+module.exports.email = [check('email').normalizeEmail().isEmail().exists()];

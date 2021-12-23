@@ -20,7 +20,7 @@ module.exports.postExists = async (uid) => {
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
-    console.log(req.files);
+    console.log(file, 'oo');
     cb(null, `./pictures/${file.fieldname}/`);
   },
   filename(req, file, cb) {
@@ -32,10 +32,14 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  limits: { fileSize: parseInt(process.env.MAX_FILE_SIZE) },
+});
 const cpUpload = upload.fields([
   { name: 'profile', maxCount: 1 },
-  { name: 'post', maxCount: 1 },
+  { name: 'image', maxCount: 1 },
+  { name: 'video', maxCount: 1 },
 ]);
 
 module.exports.fileUploader = cpUpload;

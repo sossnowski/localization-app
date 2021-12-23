@@ -46,28 +46,13 @@ module.exports.getByLocalization = async (uid) => {
   return posts;
 };
 
-// module.exports.getByCategory = async (category) => {
-//   const posts = await Post.findAll({
-//     include: [
-//       { model: Category, where: { name: category } },
-//       User,
-//       Comment,
-//       Like,
-//     ],
-//   });
-
-//   return posts;
-// };
-
-module.exports.getFromLocalizations = async (localizations) => {
+module.exports.getFromLocalizations = async (localization) => {
   const posts = await Post.findAll({
     include: [
       {
         model: Localization,
         where: {
-          uid: {
-            [Op.or]: localizations,
-          },
+          uid: localization,
         },
       },
       { model: User, attributes: ['username', 'uid'] },
@@ -105,9 +90,10 @@ module.exports.add = async (postData, files, userUid) => {
     const post = await Post.create(postToAdd, { transaction: t });
 
     let savedPhoto = null;
-    if (files.post) {
+    if (files.image || files.video) {
+      const fileToSave = files.image || files.video;
       const photo = await Photo.create(
-        { filename: files.post[0].filename, postUid: post.uid },
+        { filename: fileToSave[0].filename, postUid: post.uid },
         { transaction: t }
       );
       savedPhoto = photo;
@@ -130,9 +116,10 @@ module.exports.addToLocalization = async (postData, files, userUid) => {
       { transaction: t }
     );
     let savedPhoto = null;
-    if (files.post) {
+    if (files.image || files.video) {
+      const fileToSave = files.image || files.video;
       const photo = await Photo.create(
-        { filename: files.post[0].filename, postUid: post.uid },
+        { filename: fileToSave[0].filename, postUid: post.uid },
         { transaction: t }
       );
       savedPhoto = photo;

@@ -5,7 +5,6 @@ module.exports = (validations) => async (req, res, next) => {
     const result = await validation.run(req);
     if (result.errors.length) break;
   }
-
   const errors = validationResult(req);
   if (errors.isEmpty()) {
     return next();

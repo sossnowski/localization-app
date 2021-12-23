@@ -1,34 +1,31 @@
 config:
-  target: "http://127.0.0.1:3005"
+  target: "http://squash-akademia-pracownicy.pl"
   phases:
-    - duration: 30
-      arrivalRate: 5
-      name: Warm up
-    - duration: 30
-      arrivalRate: 5
-      rampTo: 70
-      name: Ramp up load
+    # - duration: 30
+    #   arrivalRate: 5
+    #   name: Warm up
+    # - duration: 30
+    #   arrivalRate: 5
+    #   rampTo: 70
+    #   name: Ramp up load
     - duration: 600
-      arrivalRate: 70
+      arrivalRate: 200
       name: Sustained load
 
 scenarios:
   - name: "Add comment and get dashboard data"
     flow:
-      - post:
-          headers: 
-            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJ1aWQiOiJmOWJmYjg2MC1mYmE4LTRiMDctODZlNy1kODM4ZjdmYjI5NDIiLCJpYXQiOjE2MjIxOTE4ODksImV4cCI6MTYyMjI3ODI4OX0.iO3D9CEHCnicK1mCuGJeEFFYGQeqKBzU4KIkk6HZXgU
-          url: "/comment"
-          json:
-            postUid: 4d306010-8839-41c9-8769-b7e5fd1fa5543v
-            text: "jkwkjefkv"
-            userUid: 'jkwenbvkebrkvjb'
+      # - post:
+      #     url: "/comment"
+      #     json:
+      #       postUid: 4d306010-8839-41c9-8769-b7e5fd1fa5543v
+      #       text: "przykładowa treść komentarza"
+      #       userUid: '12YUIH-8765HGYI-97879J-BYVTUF-17892HG'
       - get:
-          url: "/category"
-          headers: 
-            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJ1aWQiOiJmOWJmYjg2MC1mYmE4LTRiMDctODZlNy1kODM4ZjdmYjI5NDIiLCJpYXQiOjE2MjIxOTE4ODksImV4cCI6MTYyMjI3ODI4OX0.iO3D9CEHCnicK1mCuGJeEFFYGQeqKBzU4KIkk6HZXgU
-      # - think: 5
-      - get:
-          url: "/localization/groupedByPlace/categories"
-          headers: 
-            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJ1aWQiOiJmOWJmYjg2MC1mYmE4LTRiMDctODZlNy1kODM4ZjdmYjI5NDIiLCJpYXQiOjE2MjIxOTE4ODksImV4cCI6MTYyMjI3ODI4OX0.iO3D9CEHCnicK1mCuGJeEFFYGQeqKBzU4KIkk6HZXgU
+          url: "/"
+          # headers: 
+          #   Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJ1aWQiOiJmOWJmYjg2MC1mYmE4LTRiMDctODZlNy1kODM4ZjdmYjI5NDIiLCJpYXQiOjE2MjIxOTE4ODksImV4cCI6MTYyMjI3ODI4OX0.iO3D9CEHCnicK1mCuGJeEFFYGQeqKBzU4KIkk6HZXgU
+      # - get:
+      #     url: "/localization/groupedByPlace/categories"
+      #     headers: 
+      #       Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJ1aWQiOiJmOWJmYjg2MC1mYmE4LTRiMDctODZlNy1kODM4ZjdmYjI5NDIiLCJpYXQiOjE2MjIxOTE4ODksImV4cCI6MTYyMjI3ODI4OX0.iO3D9CEHCnicK1mCuGJeEFFYGQeqKBzU4KIkk6HZXgU

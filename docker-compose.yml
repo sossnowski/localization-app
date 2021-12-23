@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  backend:
+    build: .
+    container_name: backend
+    hostname: backend
+    networks:
+      - spotfinder
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`api.splendorwrld.com`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls.certresolver=letsencryptresolver"
+      - "traefik.http.services.backend.loadbalancer.server.port=3005"
+
+
+    volumes:
+      - ./pictures:/spotfinder/pictures
+    ports:
+      - "3306:3306"
+
+networks:
+  spotfinder:
+    external: true

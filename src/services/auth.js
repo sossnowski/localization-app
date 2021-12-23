@@ -18,3 +18,16 @@ module.exports.generateToken = (data) =>
   jwt.sign(data, process.env.JWT_KEY, {
     expiresIn: process.env.TOKEN_EXPIRED,
   });
+
+module.exports.generateConfirmationToken = (data) =>
+  jwt.sign(data, process.env.CONFIRMATION_KEY, {
+    expiresIn: process.env.CONFIRMATION_EXPIRED,
+  });
+
+module.exports.confirmationAuth = (token) => {
+  try {
+    return jwt.verify(token, process.env.CONFIRMATION_KEY);
+  } catch (e) {
+    return null;
+  }
+};

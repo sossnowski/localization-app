@@ -1,13 +1,12 @@
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const compression = require('compression');
+require('dotenv').config();
 
 const app = express();
-const morgan = require('morgan');
 
 app.use(compression());
 
-require('dotenv').config();
 const userRoutes = require('./src/routes/user');
 const postRoutes = require('./src/routes/post');
 const likeRoutes = require('./src/routes/like');
@@ -16,14 +15,14 @@ const commentRoutes = require('./src/routes/comment');
 const localizationRoutes = require('./src/routes/localization');
 const categoryRoutes = require('./src/routes/category');
 const notificationRoutes = require('./src/routes/notification');
+const { seedCategories } = require('./src/config/categorySeed');
 
 const limiter = rateLimit({
-  windowMs: 5 * 1000, // ms
-  max: 10, // limit each IP to 100 requests per windowMs
+  windowMs: 1 * 1000, // ms
+  max: 20, // limit each IP to 100 requests per windowMs
 });
 
 app.use(limiter);
-// app.use(morgan('dev'));
 app.use(express.urlencoded());
 app.use(express.json());
 
@@ -39,6 +38,7 @@ app.use((req, res, next) => {
   }
   next();
 });
+seedCategories();
 app.use('/pictures', express.static('pictures'));
 app.use('/init', initRoutes);
 app.use('/user', userRoutes);

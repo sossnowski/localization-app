@@ -50,7 +50,6 @@ module.exports.getFromArea = async (points, categories) => {
         attributes: [],
       },
     ],
-    group: ['city'],
     order: [[sequelize.literal('postCount'), 'DESC']],
   });
 

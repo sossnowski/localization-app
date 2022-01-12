@@ -34,7 +34,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage,
-  limits: { fileSize: parseInt(process.env.MAX_FILE_SIZE) },
+  limits: { fileSize: 30000000 },
 });
 const cpUpload = upload.fields([
   { name: 'profile', maxCount: 1 },

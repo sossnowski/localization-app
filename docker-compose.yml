@@ -17,7 +17,7 @@ services:
 
 
     volumes:
-      - ./pictures:/spotfinder/pictures
+      - /mnt/volume-1/files:/spotfinder/pictures
     ports:
       - "3306:3306"
 

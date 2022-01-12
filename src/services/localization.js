@@ -2,8 +2,8 @@ module.exports.filterLocalizationsByCoordinates = (
   allLocalizations,
   extent
 ) => {
-  const ROWS = 10;
-  const COLS = 8;
+  const ROWS = 5;
+  const COLS = 4;
   const resultArray = {};
   const finalArray = [];
   const xDelta =

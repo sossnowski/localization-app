@@ -153,7 +153,12 @@ module.exports.deleteByUid = async (postUid, userUid) => {
   if (postToRemove.photos.length) {
     try {
       fs.unlinkSync(
-        `${path.dirname(require.main.filename)}/pictures/post/${
+        `${path.dirname(require.main.filename)}/pictures/image/${
+          postToRemove.photos[0].filename
+        }`
+      );
+      fs.unlinkSync(
+        `${path.dirname(require.main.filename)}/pictures/video/${
           postToRemove.photos[0].filename
         }`
       );

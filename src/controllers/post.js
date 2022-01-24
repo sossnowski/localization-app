@@ -164,7 +164,7 @@ module.exports.deleteByUid = async (postUid, userUid) => {
         }`
       );
       fs.unlinkSync(
-        `${./pictures/${filename.split('_')[0]}/${
+        `./pictures/${filename.split('_')[0]}/${
           postToRemove.photos[0].filename
         }`
       );

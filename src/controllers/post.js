@@ -152,8 +152,19 @@ module.exports.deleteByUid = async (postUid, userUid) => {
   });
   if (postToRemove.photos.length) {
     try {
+      console.log(`${path.dirname(require.main.filename)}/pictures/${filename.split('_')[0]}/${
+          postToRemove.photos[0].filename
+        }`)
+      console.log(`./pictures/${filename.split('_')[0]}/${
+          postToRemove.photos[0].filename
+        }`)
       fs.unlinkSync(
         `${path.dirname(require.main.filename)}/pictures/${filename.split('_')[0]}/${
+          postToRemove.photos[0].filename
+        }`
+      );
+      fs.unlinkSync(
+        `${./pictures/${filename.split('_')[0]}/${
           postToRemove.photos[0].filename
         }`
       );

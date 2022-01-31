@@ -1,6 +1,7 @@
 const { check } = require('express-validator');
 
 module.exports.create = [
+  check('city').isString().optional({ nullable: true }),
   check('localizationUid').isUUID().notEmpty().exists(),
   check('title').isString().notEmpty().exists(),
   check('description').isString().notEmpty().exists(),

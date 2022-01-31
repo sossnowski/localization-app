@@ -19,12 +19,16 @@ const Localization = db.define('localization', {
   },
   city: {
     type: Sequelize.DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
 });
 
-Localization.hasMany(Post);
-Post.belongsTo(Localization);
+Localization.hasMany(Post, {
+  onDelete: 'cascade',
+});
+Post.belongsTo(Localization, {
+  onDelete: 'cascade',
+});
 Localization.belongsTo(Category);
 Category.hasMany(Localization);
 

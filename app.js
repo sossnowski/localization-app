@@ -40,7 +40,7 @@ app.use((req, res, next) => {
 });
 seedCategories();
 app.use('/pictures', express.static('pictures'));
-//app.use('/init', initRoutes);
+// app.use('/init', initRoutes);
 app.use('/user', userRoutes);
 app.use('/post', postRoutes);
 app.use('/like', likeRoutes);
@@ -57,6 +57,7 @@ app.use((req, res, next) => {
 
 app.use((error, req, res, next) => {
   res.status(error.status || 500);
+  console.log(error);
   res.json({
     error: {
       message: error.message,

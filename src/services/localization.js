@@ -1,3 +1,5 @@
+const axios = require('axios');
+
 module.exports.filterLocalizationsByCoordinates = (
   allLocalizations,
   extent
@@ -34,4 +36,16 @@ module.exports.filterLocalizationsByCoordinates = (
   }
 
   return finalArray;
+};
+
+module.exports.getLocalizationNameByCoordinates = async (coordinates) => {
+  const result = await axios.get(
+    `https://photon.komoot.io/reverse?lon=${coordinates[0]}&lat=${coordinates[1]}`
+  );
+
+  return (
+    result.data.features[0]?.properties?.city ||
+    result.data.features[0]?.properties?.name ||
+    null
+  );
 };

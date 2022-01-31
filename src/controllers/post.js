@@ -11,6 +11,9 @@ const CustomError = require('../helpers/error');
 const { isUserPostOwner } = require('../services/post');
 const db = require('../config/db');
 const Photo = require('../models/Photo');
+const {
+  getLocalizationNameByCoordinates,
+} = require('../services/localization');
 
 module.exports.getAll = async () => {
   const posts = await Post.findAll({
@@ -66,6 +69,10 @@ module.exports.getFromLocalizations = async (localization) => {
 };
 
 module.exports.add = async (postData, files, userUid) => {
+  if (!postData.city || postData.city === '')
+    postData.city = await getLocalizationNameByCoordinates(
+      postData.geometry.coordinates
+    );
   const localizationToAdd = {
     geometry: JSON.parse(postData.geometry),
     city: postData.city,
@@ -148,14 +155,19 @@ module.exports.deleteByUid = async (postUid, userUid) => {
 
   const postToRemove = await Post.findOne({
     where: { uid: postUid },
-    include: [Photo],
+    include: [Photo, Localization],
   });
+  const localization = await Localization.findOne({
+    where: { uid: postToRemove.localizationUid },
+    include: [{ model: Post, attributes: ['uid'] }],
+  });
+
   if (postToRemove.photos.length) {
     try {
       fs.unlinkSync(
-        `${path.dirname(require.main.filename)}/pictures/${postToRemove.photos[0].filename.split('_')[0]}/${
-          postToRemove.photos[0].filename
-        }`
+        `${path.dirname(require.main.filename)}/pictures/${
+          postToRemove.photos[0].filename.split('_')[0]
+        }/${postToRemove.photos[0].filename}`
       );
     } catch (err) {
       console.log(err);
@@ -165,4 +177,9 @@ module.exports.deleteByUid = async (postUid, userUid) => {
   await Post.destroy({
     where: { uid: postUid },
   });
+
+  if (localization.posts.length === 1)
+    await Localization.destroy({
+      where: { uid: localization.uid },
+    });
 };

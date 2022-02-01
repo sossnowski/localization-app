@@ -1,4 +1,5 @@
 const Post = require('../../models/Post');
+const User = require('../../models/User');
 const Comment = require('../../models/Comment');
 const {
   postLike,
@@ -6,11 +7,13 @@ const {
   commentLike,
   commentLikeUpdate,
 } = require('../notifications/main');
+const { sendNotification } = require('../notifications/pushNotifications');
 
 module.exports.emitPostLikeUpdateEvent = async (io, data) => {
   const personGotLike = await Post.findOne({
     where: { uid: data.postUid },
     attributes: ['userUid'],
+    include: { model: User, attributes: ['mobileToken'] },
   });
 
   if (personGotLike.userUid !== data.actionUser.uid) {
@@ -19,7 +22,7 @@ module.exports.emitPostLikeUpdateEvent = async (io, data) => {
       postUid: data.postUid,
       actionUser: data.actionUser.uid,
     });
-    console.log(notification);
+    sendNotification(notification, personGotLike.user.mobileToken);
     io.to(personGotLike.userUid).emit('notification', notification);
   }
 
@@ -34,6 +37,7 @@ module.exports.emitPostLikeEvent = async (io, data) => {
   const personGotLike = await Post.findOne({
     where: { uid: data.like.postUid },
     attributes: ['userUid'],
+    include: { model: User, attributes: ['mobileToken'] },
   });
 
   if (personGotLike.userUid !== data.actionUser.uid) {
@@ -46,7 +50,7 @@ module.exports.emitPostLikeEvent = async (io, data) => {
       data.actionUser.uid,
       personGotLike.userUid
     );
-    console.log(notification);
+    sendNotification(notification, personGotLike.user.mobileToken);
     io.to(personGotLike.userUid).emit('notification', notification);
   }
 
@@ -56,7 +60,13 @@ module.exports.emitPostLikeEvent = async (io, data) => {
 module.exports.emitCommentLikeUpdateEvent = async (io, data) => {
   const comment = await Comment.findOne({
     where: { uid: data.commentUid },
-    include: { model: Post, attributes: ['uid', 'userUid'] },
+    include: [
+      {
+        model: Post,
+        attributes: ['uid', 'userUid'],
+      },
+      { model: User, attributes: ['mobileToken'] },
+    ],
   });
 
   if (comment.userUid !== data.actionUser.uid) {
@@ -65,6 +75,7 @@ module.exports.emitCommentLikeUpdateEvent = async (io, data) => {
       commentUid: comment.uid,
       actionUser: data.actionUser.uid,
     });
+    sendNotification(notification, comment.user.mobileToken);
     io.to(comment.userUid).emit('notification', notification);
   }
 
@@ -79,7 +90,10 @@ module.exports.emitCommentLikeUpdateEvent = async (io, data) => {
 module.exports.emitCommentLikeEvent = async (io, data) => {
   const comment = await Comment.findOne({
     where: { uid: data.like.commentUid },
-    include: { model: Post, attributes: ['uid', 'userUid'] },
+    include: [
+      { model: Post, attributes: ['uid', 'userUid'] },
+      { model: User, attributes: ['mobileToken'] },
+    ],
   });
 
   if (comment.userUid !== data.actionUser.uid) {
@@ -92,6 +106,7 @@ module.exports.emitCommentLikeEvent = async (io, data) => {
       data.actionUser.uid,
       comment.userUid
     );
+    sendNotification(notification, comment.user.mobileToken);
     io.to(comment.userUid).emit('notification', notification);
   }
 

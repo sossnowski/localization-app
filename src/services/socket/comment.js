@@ -1,10 +1,13 @@
 const Post = require('../../models/Post');
+const User = require('../../models/User');
 const { addComment } = require('../notifications/main');
+const { sendNotification } = require('../notifications/pushNotifications');
 
 module.exports.emitCommentEvent = async (io, data) => {
   const commentedPostOwner = await Post.findOne({
     where: { uid: data.comment.postUid },
     attributes: ['userUid'],
+    include: { model: User, attributes: ['mobileToken'] },
   });
 
   if (commentedPostOwner.userUid === data.actionUser.uid) return;
@@ -17,7 +20,7 @@ module.exports.emitCommentEvent = async (io, data) => {
     data.actionUser.uid,
     commentedPostOwner.userUid
   );
-
+  sendNotification(notification, commentedPostOwner.user.mobileToken);
   io.to(commentedPostOwner.userUid).emit('notification', notification);
 
   io.sockets

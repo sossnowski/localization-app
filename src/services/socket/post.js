@@ -7,7 +7,12 @@ const Comment = require('../../models/Comment');
 module.exports.emitPostEvent = async (io, post) => {
   const postFromDB = await Post.findOne({
     where: { uid: post.uid },
-    include: [User, Like, Comment, Photo],
+    include: [
+      { model: User, attributes: ['username', 'uid'] },
+      Like,
+      Comment,
+      Photo,
+    ],
   });
 
   if (!postFromDB) return;

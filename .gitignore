@@ -4,3 +4,5 @@ pictures/
 !pictures/post
 pictures/post/*
 !pictures/post/.init
+
+/src/services/notifications/spot*

@@ -37,6 +37,14 @@ const User = db.define('user', {
     type: Sequelize.DataTypes.BOOLEAN,
     defaultValue: false,
   },
+  mobileToken: {
+    type: Sequelize.DataTypes.STRING,
+    defaultValue: null,
+  },
+  mobileOS: {
+    type: Sequelize.DataTypes.STRING,
+    defaultValue: null,
+  },
   configuration: {
     type: Sequelize.DataTypes.STRING,
     allowNull: true,

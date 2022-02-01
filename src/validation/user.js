@@ -12,9 +12,11 @@ module.exports.login = [
 ];
 
 module.exports.update = [
-  check('email').normalizeEmail().isEmail(),
-  check('password').isString().notEmpty().optional(),
-  check('username').isString().notEmpty(),
+  check('email').normalizeEmail().isEmail().optional({ nullable: true }),
+  check('password').isString().optional({ nullable: true }),
+  check('username').isString().optional({ nullable: true }),
+  check('mobileToken').isString().optional({ nullable: true }),
+  check('mobileOs').isString().optional({ nullable: true }),
 ];
 
 module.exports.setNewPassword = [

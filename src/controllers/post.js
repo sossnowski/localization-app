@@ -26,7 +26,13 @@ module.exports.getAll = async () => {
 module.exports.getByUid = async (uid) => {
   const post = await Post.findOne({
     where: { uid },
-    include: [Comment, Like, Localization, User, Photo],
+    include: [
+      Comment,
+      Like,
+      Localization,
+      { model: User, attributes: ['username', 'uid'] },
+      Photo,
+    ],
   });
   if (!post) throw new CustomError(404, 'Not found post');
 
@@ -42,6 +48,7 @@ module.exports.getByLocalization = async (uid) => {
         { model: User, attributes: ['username', 'uid'] },
         Comment,
         Like,
+        Photo,
       ],
     },
   });
@@ -121,7 +128,7 @@ module.exports.addToLocalization = async (postData, files, userUid) => {
     const post = await Post.create(
       { ...postData, userUid },
       { transaction: t }
-    );
+    ).then((data) => data.get({ plain: true }));
     let savedPhoto = null;
     if (files.image || files.video) {
       const fileToSave = files.image || files.video;
@@ -135,7 +142,7 @@ module.exports.addToLocalization = async (postData, files, userUid) => {
     return { ...post, filename: savedPhoto?.filename };
   });
 
-  return result;
+  return this.getByUid(result.uid || null);
 };
 
 module.exports.update = async (postData, userUid) => {

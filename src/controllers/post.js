@@ -76,12 +76,13 @@ module.exports.getFromLocalizations = async (localization) => {
 };
 
 module.exports.add = async (postData, files, userUid) => {
+  const geometry = JSON.parse(postData.geometry);
   if (!postData.city || postData.city === '')
     postData.city = await getLocalizationNameByCoordinates(
-      postData.geometry.coordinates
+      geometry.coordinates
     );
   const localizationToAdd = {
-    geometry: JSON.parse(postData.geometry),
+    geometry,
     city: postData.city,
     categoryUid: postData.categoryUid,
   };

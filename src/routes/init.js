@@ -21,18 +21,18 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/force', async (req, res) => {
-  try {
-    await db.sync({ force: true });
-    await seedCategories();
+// router.get('/force', async (req, res) => {
+//   try {
+//     await db.sync({ force: true });
+//     await seedCategories();
 
-    res.status(200).json({
-      success: true,
-      message: 'synchronised',
-    });
-  } catch (error) {
-    console.log(error);
-  }
-});
+//     res.status(200).json({
+//       success: true,
+//       message: 'synchronised',
+//     });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
 
-module.exports = router;
+// module.exports = router;

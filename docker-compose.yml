@@ -20,6 +20,11 @@ services:
       - /mnt/volume-1/files:/spotfinder/pictures
     ports:
       - "3306:3306"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 networks:
   spotfinder:

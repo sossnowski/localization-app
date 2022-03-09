@@ -140,7 +140,7 @@ module.exports.addToLocalization = async (postData, files, userUid) => {
       savedPhoto = photo;
     }
 
-    return { ...post, filename: savedPhoto?.filename };
+    return { ...post.get({ plain: true }), filename: savedPhoto?.filename };
   });
 
   return this.getByUid(result.uid || null);

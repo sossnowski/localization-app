@@ -126,10 +126,9 @@ module.exports.add = async (postData, files, userUid) => {
 
 module.exports.addToLocalization = async (postData, files, userUid) => {
   const result = await db.transaction(async (t) => {
-    const post = await Post.create(
-      { ...postData, userUid },
-      { transaction: t }
-    ).then((data) => data.get({ plain: true }));
+    const post = (
+      await Post.create({ ...postData, userUid }, { transaction: t })
+    ).get({ plain: true });
     let savedPhoto = null;
     if (files.image || files.video) {
       const fileToSave = files.image || files.video;
@@ -140,7 +139,7 @@ module.exports.addToLocalization = async (postData, files, userUid) => {
       savedPhoto = photo;
     }
 
-    return { ...post.get({ plain: true }), filename: savedPhoto?.filename };
+    return { ...post, filename: savedPhoto?.filename };
   });
 
   return this.getByUid(result.uid || null);

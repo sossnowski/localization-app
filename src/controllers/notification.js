@@ -15,8 +15,8 @@ module.exports.getAll = (offset, userUid) => {
 
   return Notification.findAll({
     where: { targetUid: userUid },
-    order: [['createdAt', 'desc']],
-    group: 'text',
+    order: [['updatedAt', 'desc']],
+    // group: 'text',
     limit: parseInt(process.env.NOTIFICATIONS_PER_PAGE),
   });
 };

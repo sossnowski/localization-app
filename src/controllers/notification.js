@@ -1,4 +1,3 @@
-const CustomError = require('../helpers/error');
 const Notification = require('../models/Notification');
 require('dotenv').config();
 
@@ -22,11 +21,26 @@ module.exports.getAll = (offset, userUid) => {
   });
 };
 
-module.exports.setNotificationAsSeen = async (uid, userUid) => {
-  const notification = await Notification.findOne({ where: { uid } });
+module.exports.setNotificationAsSeen = async (uid, userUid) =>
+  Notification.update(
+    { new: false },
+    {
+      where: { uid, targetUid: userUid },
+    }
+  );
 
-  if (notification.targetUid !== userUid)
-    throw new CustomError(400, 'Bad request');
-  notification.new = false;
-  await notification.save();
-};
+module.exports.setAllCommentNotificationsAsSeen = async (uid, userUid) =>
+  Notification.update(
+    { new: false },
+    {
+      where: { text: `commentUid:${uid}`, targetUid: userUid },
+    }
+  );
+
+module.exports.setAllPostNotificationsAsSeen = async (uid, userUid) =>
+  Notification.update(
+    { new: false },
+    {
+      where: { text: `postUid:${uid}`, targetUid: userUid },
+    }
+  );

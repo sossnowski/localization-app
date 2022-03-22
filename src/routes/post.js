@@ -97,7 +97,7 @@ router.post(
   async (req, res, next) => {
     try {
       const post = await addToLocalization(req.body, req.files, req.data.uid);
-      await emitPostEvent(req.app.get('io'), post);
+      emitPostEvent(req.app.get('io'), post);
 
       res.status(201).json(post);
     } catch (error) {

@@ -29,18 +29,18 @@ module.exports.setNotificationAsSeen = async (uid, userUid) =>
     }
   );
 
-module.exports.setAllCommentNotificationsAsSeen = async (uid, userUid) =>
+module.exports.setAllCommentNotificationsAsSeen = async (uid) =>
   Notification.update(
     { new: false },
     {
-      where: { text: `commentUid:${uid}`, targetUid: userUid },
+      where: { text: [`commentUid:${uid}`, `addComment:${uid}`] },
     }
   );
 
-module.exports.setAllPostNotificationsAsSeen = async (uid, userUid) =>
+module.exports.setAllPostNotificationsAsSeen = async (uid) =>
   Notification.update(
     { new: false },
     {
-      where: { text: `postUid:${uid}`, targetUid: userUid },
+      where: { text: `postUid:${uid}` },
     }
   );

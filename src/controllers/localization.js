@@ -47,7 +47,6 @@ module.exports.getFromArea = async (points, categories) => {
       },
     ],
     group: ['uid'],
-    order: [[sequelize.literal('postCount'), 'DESC']],
   });
 
   return filterLocalizationsByCoordinates(allExtentLocalizations, {

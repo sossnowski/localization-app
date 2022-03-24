@@ -57,7 +57,9 @@ Post.belongsTo(User);
 User.hasMany(Like);
 User.hasMany(Comment);
 Comment.belongsTo(User);
-User.hasMany(Notification2);
 User.hasMany(Notification, { foreignKey: 'targetUid' });
+User.hasMany(Notification2, {
+  onDelete: 'cascade',
+});
 
 module.exports = User;

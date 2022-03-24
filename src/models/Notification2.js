@@ -15,7 +15,7 @@ const Notification2 = db.define(
       unique: true,
     },
     number: {
-      type: Sequelize.DataTypes.NUMBER,
+      type: Sequelize.DataTypes.INTEGER,
       default: 1,
     },
     username: {

@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const db = require('../config/db');
 
 const Notification2 = db.define(
-  'notificationUpgraded',
+  'notificationup',
   {
     uid: {
       type: Sequelize.DataTypes.UUID,

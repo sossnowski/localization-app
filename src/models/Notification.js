@@ -12,10 +12,11 @@ const Notification = db.define(
     text: {
       type: Sequelize.DataTypes.STRING,
       allowNull: false,
+      // unique: true,
     },
-    isUpVote: {
-      type: Sequelize.DataTypes.BOOLEAN,
-      allowNull: true,
+    number: {
+      type: Sequelize.DataTypes.NUMBER,
+      default: 1,
     },
     username: {
       type: Sequelize.DataTypes.STRING,
@@ -27,7 +28,7 @@ const Notification = db.define(
     },
   },
   {
-    indexes: [{ fields: ['createdAt'] }],
+    indexes: [{ fields: ['updatedAt'] }],
   }
 );
 

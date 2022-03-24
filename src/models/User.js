@@ -57,6 +57,5 @@ User.hasMany(Like);
 User.hasMany(Comment);
 Comment.belongsTo(User);
 User.hasMany(Notification);
-User.hasMany(Notification, { foreignKey: 'targetUid' });
 
 module.exports = User;

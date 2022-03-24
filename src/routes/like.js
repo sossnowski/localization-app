@@ -10,8 +10,6 @@ const {
 const { auth } = require('../services/auth');
 const {
   emitPostLikeEvent,
-  emitPostLikeUpdateEvent,
-  emitCommentLikeUpdateEvent,
   emitCommentLikeEvent,
 } = require('../services/socket/like');
 const validationRules = require('../validation/like');
@@ -24,11 +22,6 @@ router.patch(
   async (req, res, next) => {
     try {
       await setLike(req.body.postUid, req.body.isUpVote, req.data.uid);
-      emitPostLikeUpdateEvent(req.app.get('io'), {
-        ...req.body,
-        actionUser: req.data,
-        localizationUid: req.body.localizationUid,
-      });
       res.status(200).json({
         message: 'success',
       });
@@ -72,11 +65,6 @@ router.patch(
         req.body.isUpVote,
         req.data.uid
       );
-      emitCommentLikeUpdateEvent(req.app.get('io'), {
-        ...req.body,
-        actionUser: req.data,
-        localizationUid: req.body.localizationUid,
-      });
       res.status(200).json({
         message: 'success',
       });

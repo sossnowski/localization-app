@@ -24,21 +24,6 @@ module.exports.setNotificationAsSeen = async (uid) =>
     { new: false },
     {
       where: { uid },
-    }
+    },
+    { silent: true }
   );
-
-// module.exports.setAllCommentNotificationsAsSeen = async (uid) =>
-//   Notification.update(
-//     { new: false },
-//     {
-//       where: { text: [`commentUid:${uid}`, `addComment:${uid}`] },
-//     }
-//   );
-
-// module.exports.setAllPostNotificationsAsSeen = async (uid) =>
-//   Notification.update(
-//     { new: false },
-//     {
-//       where: { text: `postUid:${uid}` },
-//     }
-//   );

@@ -40,7 +40,7 @@ app.use((req, res, next) => {
 });
 seedCategories();
 app.use('/pictures', express.static('pictures'));
-//app.use('/init', initRoutes);
+app.use('/init', initRoutes);
 app.use('/user', userRoutes);
 app.use('/post', postRoutes);
 app.use('/like', likeRoutes);

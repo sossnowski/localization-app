@@ -1,8 +1,8 @@
 const Sequelize = require('sequelize');
 const db = require('../config/db');
 
-const Notification = db.define(
-  'notification',
+const Notification2 = db.define(
+  'notification2',
   {
     uid: {
       type: Sequelize.DataTypes.UUID,
@@ -12,19 +12,24 @@ const Notification = db.define(
     text: {
       type: Sequelize.DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
-    isUpVote: {
-      type: Sequelize.DataTypes.BOOLEAN,
-      allowNull: true,
+    number: {
+      type: Sequelize.DataTypes.NUMBER,
+      default: 1,
     },
     username: {
       type: Sequelize.DataTypes.STRING,
       allowNull: false,
     },
+    new: {
+      type: Sequelize.DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
   },
   {
-    indexes: [{ fields: ['createdAt'] }],
+    indexes: [{ fields: ['text'] }],
   }
 );
 
-module.exports = Notification;
+module.exports = Notification2;

@@ -24,6 +24,6 @@ module.exports.setNotificationAsSeen = async (uid) =>
     { new: false },
     {
       where: { uid },
-    },
-    { silent: true }
+      silent: true,
+    }
   );

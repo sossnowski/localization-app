@@ -31,9 +31,9 @@ module.exports = new Sequelize(
     host: process.env.DB_HOST,
     dialect: process.env.DB_DIALECT,
     logging: false,
-    // define: {
-    //   charset: 'utf8',
-    //   collate: 'utf8_general_ci',
-    // },
+    define: {
+      charset: 'utf8',
+      collate: 'utf8_general_ci',
+    },
   }
 );

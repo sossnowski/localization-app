@@ -17,7 +17,6 @@ module.exports.emitCommentEvent = async (io, data) => {
       username: data.actionUser.username,
       commentUid: data.comment.dataValues.uid,
     },
-    data.actionUser.uid,
     commentedPostOwner.userUid
   );
   sendNotification(notification, commentedPostOwner.user.mobileToken);

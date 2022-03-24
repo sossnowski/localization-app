@@ -7,9 +7,9 @@ const { seedCategories } = require('../config/categorySeed');
 const { migrateData } = require('../../script');
 // const Notification = require('../models/Notification');
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   try {
-    await db.sync({ alter: true });
+    // await db.sync({ alter: true });
     // await seedCategories();
     // await Notification.sync();
     await migrateData();
@@ -20,6 +20,7 @@ router.get('/', async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+    next(error);
   }
 });
 

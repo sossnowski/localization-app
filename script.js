@@ -2,9 +2,17 @@ const Notification = require('./src/models/Notification');
 const Notification2 = require('./src/models/Notification2');
 
 module.exports.migrateData = async () => {
-  const groupedNotifications = await Notification.findAll({ group: ['text'] });
+  await Notification2.destroy({});
+  const groupedNotifications = await Notification.findAll({
+    group: ['text'],
+    raw: true,
+  });
+  console.log(groupedNotifications);
   for (const notify of groupedNotifications) {
-    const all = await Notification.findAll({ where: { text: notify.text } });
+    const all = await Notification.findAll({
+      where: { text: notify.text },
+      raw: true,
+    });
     await Notification2.create({
       text: notify.text,
       number: all.length,
@@ -15,6 +23,5 @@ module.exports.migrateData = async () => {
     // const uidsToRemove = all.map((a) => a.uid);
     // await Notification.destroy({ where: { uid: uidsToRemove } });
   }
-  const result = await Notification2.findAll({});
-  console.log(result);
+  // const result = await Notification2.findAll({});
 };

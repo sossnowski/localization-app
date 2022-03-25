@@ -25,7 +25,7 @@ module.exports.getPostByComment = async (commentUid) => {
         model: Post,
         include: [
           Localization,
-          User,
+          { model: User, attributes: ['username', 'uid'] },
           Like,
           Photo,
           { model: Comment, include: [Like] },
@@ -70,7 +70,6 @@ module.exports.deleteByUid = async (commentUid, userUid) => {
 };
 
 module.exports.getLikes = async (commentUid) => {
-  console.log(commentUid);
   const likes = await Like.findAll({ where: { commentUid } });
 
   return likes;

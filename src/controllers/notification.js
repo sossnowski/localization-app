@@ -1,5 +1,6 @@
 const Notification = require('../models/Notification2');
-require('dotenv').config();
+
+const NOTIFICATIONS_PER_PAGE = 10;
 
 module.exports.getAll = (offset, userUid) => {
   const parsed = parseInt(offset);
@@ -8,14 +9,14 @@ module.exports.getAll = (offset, userUid) => {
       where: { userUid },
       order: [['updatedAt', 'desc']],
       offset: parsed,
-      limit: parseInt(process.env.NOTIFICATIONS_PER_PAGE),
+      limit: parseInt(NOTIFICATIONS_PER_PAGE),
     });
   }
 
   return Notification.findAll({
     where: { userUid },
     order: [['updatedAt', 'desc']],
-    limit: parseInt(process.env.NOTIFICATIONS_PER_PAGE),
+    limit: parseInt(NOTIFICATIONS_PER_PAGE),
   });
 };
 

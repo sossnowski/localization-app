@@ -1,4 +1,3 @@
-const { Op } = require('sequelize');
 const fs = require('fs');
 const path = require('path');
 const Like = require('../models/Like');
@@ -39,7 +38,7 @@ module.exports.getByUid = async (uid) => {
   return post;
 };
 
-module.exports.getFromLocalizations = async (localization) => {
+module.exports.getFromLocalization = async (localization) => {
   const posts = await Post.findAll({
     include: [
       {

@@ -1,4 +1,4 @@
-const Notification = require('../models/Notification2');
+const Notification = require('../models/Notification');
 
 const NOTIFICATIONS_PER_PAGE = 10;
 

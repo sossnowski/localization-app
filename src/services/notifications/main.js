@@ -1,4 +1,4 @@
-const Notification = require('../../models/Notification2');
+const Notification = require('../../models/Notification');
 
 module.exports.postLike = async (data, to) => {
   const notification = await Notification.findOne({

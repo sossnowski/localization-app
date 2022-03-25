@@ -4,7 +4,6 @@ const Post = require('./Post');
 const Like = require('./Like');
 const Comment = require('./Comment');
 const Notification = require('./Notification');
-const Notification2 = require('./Notification2');
 
 const User = db.define('user', {
   uid: {
@@ -57,8 +56,7 @@ Post.belongsTo(User);
 User.hasMany(Like);
 User.hasMany(Comment);
 Comment.belongsTo(User);
-User.hasMany(Notification, { foreignKey: 'targetUid' });
-User.hasMany(Notification2, {
+User.hasMany(Notification, {
   onDelete: 'cascade',
 });
 

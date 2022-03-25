@@ -10,24 +10,29 @@ module.exports.migrateData = async () => {
   });
   for (const notify of groupedNotifications) {
     if (notify.text.includes('addComment')) {
-      const comment = await getPostByComment(notify.text.split(':')[1]);
-      console.log(comment.postUid);
-      const notification = await Notification2.findOne({
-        where: {
-          text: `addComment:${comment.postUid}`,
-        },
-      });
-      if (notification) {
-        notification.number += 1;
-        notification.new = true;
-        notification.username = notify.username;
-        notification.save();
-      } else {
-        await Notification2.create({
-          userUid: notify.targetUid,
-          text: `addComment:${comment.postUid}`,
-          username: notify.username,
+      try {
+        const comment = await getPostByComment(notify.text.split(':')[1]);
+        console.log(comment.postUid);
+        const notification = await Notification2.findOne({
+          where: {
+            text: `addComment:${comment.postUid}`,
+          },
         });
+        if (notification) {
+          notification.number += 1;
+          notification.new = true;
+          notification.username = notify.username;
+          notification.save();
+        } else {
+          await Notification2.create({
+            userUid: notify.targetUid,
+            text: `addComment:${comment.postUid}`,
+            username: notify.username,
+          });
+        }
+      } catch (e) {
+        console.log('nie ma juz');
+        continue;
       }
     } else {
       const all = await Notification.findAll({

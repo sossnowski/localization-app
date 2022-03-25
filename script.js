@@ -1,6 +1,9 @@
 const Notification = require('./src/models/Notification');
 const Notification2 = require('./src/models/Notification2');
 const { getPostByComment } = require('./src/controllers/comment');
+const Post = require('./src/models/Post');
+const Comment = require('./src/models/Comment');
+const Like = require('./src/models/Like');
 
 module.exports.migrateData = async () => {
   await Notification2.destroy({ where: {} });
@@ -51,4 +54,15 @@ module.exports.migrateData = async () => {
     // await Notification.destroy({ where: { uid: uidsToRemove } });
   }
   // const result = await Notification2.findAll({});
+};
+
+module.exports.assignLikes = async () => {
+  const posts = await Post.findAll({ include: [Comment, Like] });
+  for (const post of posts) {
+    const likesNr = post.likes.filter((l) => l.isUpVote === true).length;
+    post.likesNumber = likesNr;
+    post.dislikesNumber = post.likes.length - likesNr;
+    post.commentNumber = post.comments.length;
+    post.save();
+  }
 };

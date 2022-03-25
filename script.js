@@ -3,7 +3,7 @@ const Notification2 = require('./src/models/Notification2');
 const { getPostByComment } = require('./src/controllers/comment');
 
 module.exports.migrateData = async () => {
-  await Notification2.destroy({});
+  await Notification2.destroy({ where: {} });
   const groupedNotifications = await Notification.findAll({
     group: ['text'],
     raw: true,

@@ -22,15 +22,15 @@ const Post = db.define(
     },
     likesNumber: {
       type: Sequelize.DataTypes.INTEGER,
-      default: 0,
+      defaultValue: 0,
     },
     dislikesNumber: {
       type: Sequelize.DataTypes.INTEGER,
-      default: 0,
+      defaultValue: 0,
     },
     commentNumber: {
       type: Sequelize.DataTypes.INTEGER,
-      default: 0,
+      defaultValue: 0,
     },
   },
   {

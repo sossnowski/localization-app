@@ -14,11 +14,11 @@ const Comment = db.define('comment', {
   },
   likesNumber: {
     type: Sequelize.DataTypes.INTEGER,
-    default: 0,
+    defaultValue: 0,
   },
   dislikesNumber: {
     type: Sequelize.DataTypes.INTEGER,
-    default: 0,
+    defaultValue: 0,
   },
 });
 

@@ -46,7 +46,7 @@ module.exports.commentLike = async (data, to) => {
 
 module.exports.addComment = async (data, to) => {
   const notification = await Notification.findOne({
-    where: { text: `addComment:${data.commentUid}`, userUid: to },
+    where: { text: `addComment:${data.postUid}`, userUid: to },
   });
   if (notification) {
     notification.number += 1;
@@ -59,7 +59,7 @@ module.exports.addComment = async (data, to) => {
 
   const newNotification = await Notification.create({
     userUid: to,
-    text: `addComment:${data.commentUid}`,
+    text: `addComment:${data.postUid}`,
     username: data.username,
   });
 

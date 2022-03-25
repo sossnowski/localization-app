@@ -20,10 +20,12 @@ Like.afterCreate(async (like, options) => {
     const post = await like.getPost();
     if (like.isUpVote) post.likesNumber += 1;
     else post.dislikesNumber += 1;
+    post.save();
   } else {
     const comment = await like.getComment();
     if (like.isUpVote) comment.likesNumber += 1;
     else comment.dislikesNumber += 1;
+    comment.save();
   }
 });
 
@@ -37,6 +39,7 @@ Like.afterUpdate(async (like, options) => {
       post.likesNumber -= 1;
       post.dislikesNumber += 1;
     }
+    post.save();
   } else {
     const comment = await like.getComment();
     if (like.isUpVote) {
@@ -46,5 +49,6 @@ Like.afterUpdate(async (like, options) => {
       comment.dislikesNumber += 1;
       comment.likesNumber -= 1;
     }
+    comment.save();
   }
 });

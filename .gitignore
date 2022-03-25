@@ -5,4 +5,5 @@ pictures/
 pictures/post/*
 !pictures/post/.init
 
-/src/services/notifications/spot*
+/src/services/notifications/spotfinderFcm.json
+docker-compose.yml

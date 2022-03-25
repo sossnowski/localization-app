@@ -4,8 +4,7 @@ const router = express.Router();
 const {
   getByCategory,
   getAll,
-  getByLocalization,
-  getFromLocalizations,
+  getFromLocalization,
   add,
   update,
   getByUid,
@@ -40,19 +39,9 @@ router.get('/:uid', async (req, res, next) => {
   }
 });
 
-router.get('/localization/:uid', async (req, res, next) => {
-  try {
-    const posts = await getByLocalization(req.params.uid);
-
-    res.status(200).json(posts);
-  } catch (error) {
-    next(error);
-  }
-});
-
 router.get('/localizations/:uid', async (req, res, next) => {
   try {
-    const posts = await getFromLocalizations(req.params.uid);
+    const posts = await getFromLocalization(req.params.uid);
 
     res.status(200).json(posts);
   } catch (error) {
@@ -97,7 +86,7 @@ router.post(
   async (req, res, next) => {
     try {
       const post = await addToLocalization(req.body, req.files, req.data.uid);
-      await emitPostEvent(req.app.get('io'), post);
+      emitPostEvent(req.app.get('io'), post);
 
       res.status(201).json(post);
     } catch (error) {

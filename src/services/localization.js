@@ -4,8 +4,8 @@ module.exports.filterLocalizationsByCoordinates = (
   allLocalizations,
   extent
 ) => {
-  const ROWS = 5;
-  const COLS = 4;
+  const ROWS = 8;
+  const COLS = 15;
   const resultArray = {};
   const finalArray = [];
   const xDelta =
@@ -21,9 +21,6 @@ module.exports.filterLocalizationsByCoordinates = (
     );
     if (!resultArray[firstIndex]) {
       resultArray[firstIndex] = {};
-      resultArray[firstIndex][secondIndex] = loc;
-      finalArray.push({ ...loc, numberOfPlaces: 1 });
-    } else if (!resultArray[firstIndex][secondIndex]) {
       resultArray[firstIndex][secondIndex] = loc;
       finalArray.push({ ...loc, numberOfPlaces: 1 });
     } else if (resultArray[firstIndex][secondIndex]) {

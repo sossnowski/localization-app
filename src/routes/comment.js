@@ -37,7 +37,7 @@ router.get('/withPostData/:commentUid', auth, async (req, res, next) => {
 router.post('/', auth, validate(validationRules), async (req, res, next) => {
   try {
     const comment = await add(req.body, req.data.uid);
-    await emitCommentEvent(req.app.get('io'), {
+    emitCommentEvent(req.app.get('io'), {
       comment,
       actionUser: req.data,
       localizationUid: req.body.localizationUid,

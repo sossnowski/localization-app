@@ -15,9 +15,8 @@ module.exports.emitCommentEvent = async (io, data) => {
   const notification = await addComment(
     {
       username: data.actionUser.username,
-      commentUid: data.comment.dataValues.uid,
+      postUid: data.comment.postUid,
     },
-    data.actionUser.uid,
     commentedPostOwner.userUid
   );
   sendNotification(notification, commentedPostOwner.user.mobileToken);

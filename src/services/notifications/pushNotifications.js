@@ -40,6 +40,7 @@ const generateNotificationText = (notification) => {
 };
 
 module.exports.sendNotification = async (notification, token) => {
+  if (!token || !notification) return;
   const message = {
     token,
     notification: {
@@ -51,6 +52,9 @@ module.exports.sendNotification = async (notification, token) => {
       uid: notification.uid,
     },
   };
-
-  return messaging.send(message);
+  try {
+    messaging.send(message);
+  } catch (e) {
+    console.log('push notify error');
+  }
 };

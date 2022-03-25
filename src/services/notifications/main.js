@@ -1,61 +1,67 @@
 const Notification = require('../../models/Notification');
 
-module.exports.postLike = async (data, from, to) => {
-  const notification = await Notification.create({
-    isUpVote: data.isUpVote,
-    userUid: from,
-    targetUid: to,
+module.exports.postLike = async (data, to) => {
+  const notification = await Notification.findOne({
+    where: { text: `postUid:${data.postUid}`, userUid: to },
+  });
+  if (notification) {
+    notification.number += 1;
+    notification.new = true;
+    notification.username = data.username;
+    notification.save();
+
+    return notification;
+  }
+
+  const newNotification = await Notification.create({
+    userUid: to,
     text: `postUid:${data.postUid}`,
     username: data.username,
   });
 
-  return notification;
+  return newNotification;
 };
 
-module.exports.postLikeUpdate = async (data) => {
+module.exports.commentLike = async (data, to) => {
   const notification = await Notification.findOne({
-    where: { text: `postUid:${data.postUid}`, userUid: data.actionUser },
+    where: { text: `commentUid:${data.commentUid}`, userUid: to },
   });
-  if (!notification) return null;
-  notification.isUpVote = data.isUpVote;
-  notification.new = true;
-  notification.save();
+  if (notification) {
+    notification.number += 1;
+    notification.new = true;
+    notification.username = data.username;
+    notification.save();
 
-  return notification;
-};
+    return notification;
+  }
 
-module.exports.commentLike = async (data, from, to) => {
-  const notification = await Notification.create({
-    isUpVote: data.isUpVote,
-    userUid: from,
-    targetUid: to,
+  const newNotification = await Notification.create({
+    userUid: to,
     text: `commentUid:${data.commentUid}`,
     username: data.username,
   });
 
-  return notification;
+  return newNotification;
 };
 
-module.exports.commentLikeUpdate = async (data) => {
-  console.log(data);
+module.exports.addComment = async (data, to) => {
   const notification = await Notification.findOne({
-    where: { text: `commentUid:${data.commentUid}`, userUid: data.actionUser },
+    where: { text: `addComment:${data.postUid}`, userUid: to },
   });
-  if (!notification) return null;
-  notification.isUpVote = data.isUpVote;
-  notification.new = true;
-  notification.save();
+  if (notification) {
+    notification.number += 1;
+    notification.new = true;
+    notification.username = data.username;
+    notification.save();
 
-  return notification;
-};
+    return notification;
+  }
 
-module.exports.addComment = async (data, from, to) => {
-  const notification = await Notification.create({
-    userUid: from,
-    targetUid: to,
-    text: `addComment:${data.commentUid}`,
+  const newNotification = await Notification.create({
+    userUid: to,
+    text: `addComment:${data.postUid}`,
     username: data.username,
   });
 
-  return notification;
+  return newNotification;
 };

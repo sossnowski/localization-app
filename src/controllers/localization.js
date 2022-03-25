@@ -32,11 +32,7 @@ module.exports.getFromArea = async (points, categories) => {
 
   const allExtentLocalizations = await Localization.findAll({
     raw: true,
-    attributes: {
-      include: [
-        [sequelize.fn('COUNT', sequelize.col('posts.uid')), 'postCount'],
-      ],
-    },
+    attributes: ['uid', 'geometry'],
     where: contains,
     include: [
       {
@@ -51,7 +47,6 @@ module.exports.getFromArea = async (points, categories) => {
       },
     ],
     group: ['uid'],
-    order: [[sequelize.literal('postCount'), 'DESC']],
   });
 
   return filterLocalizationsByCoordinates(allExtentLocalizations, {

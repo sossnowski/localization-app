@@ -1,4 +1,3 @@
-const { Op } = require('sequelize');
 const fs = require('fs');
 const path = require('path');
 const Like = require('../models/Like');
@@ -39,24 +38,7 @@ module.exports.getByUid = async (uid) => {
   return post;
 };
 
-module.exports.getByLocalization = async (uid) => {
-  const posts = Localization.findOne({
-    where: { uid },
-    include: {
-      model: Post,
-      include: [
-        { model: User, attributes: ['username', 'uid'] },
-        Comment,
-        Like,
-        Photo,
-      ],
-    },
-  });
-
-  return posts;
-};
-
-module.exports.getFromLocalizations = async (localization) => {
+module.exports.getFromLocalization = async (localization) => {
   const posts = await Post.findAll({
     include: [
       {
@@ -66,8 +48,7 @@ module.exports.getFromLocalizations = async (localization) => {
         },
       },
       { model: User, attributes: ['username', 'uid'] },
-      Comment,
-      Like,
+      { model: Like, attributes: ['uid', 'userUid', 'isUpVote'] },
       Photo,
     ],
   });
@@ -126,10 +107,9 @@ module.exports.add = async (postData, files, userUid) => {
 
 module.exports.addToLocalization = async (postData, files, userUid) => {
   const result = await db.transaction(async (t) => {
-    const post = await Post.create(
-      { ...postData, userUid },
-      { transaction: t }
-    ).then((data) => data.get({ plain: true }));
+    const post = (
+      await Post.create({ ...postData, userUid }, { transaction: t })
+    ).get({ plain: true });
     let savedPhoto = null;
     if (files.image || files.video) {
       const fileToSave = files.image || files.video;

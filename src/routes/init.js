@@ -9,10 +9,10 @@ const { migrateData } = require('../../script');
 
 router.get('/', async (req, res, next) => {
   try {
-    // await db.sync({ alter: true });
+    await db.sync({ alter: true });
     // await seedCategories();
     // await Notification.sync();
-    await migrateData();
+    // await migrateData();
 
     res.status(200).json({
       success: true,

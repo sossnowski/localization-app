@@ -30,5 +30,7 @@ Like.belongsTo(Comment);
 module.exports = Comment;
 
 Comment.afterCreate(async (comment, options) => {
-  comment.setPost({ commentNumber: Sequelize.literal('commentNumber + 1') });
+  const post = await comment.getPost();
+  post.commentNumber += 1;
+  post.save();
 });

@@ -16,24 +16,35 @@ const Like = db.define('like', {
 module.exports = Like;
 
 Like.afterCreate(async (like, options) => {
-  const updateObj = like.isUpVote
-    ? { likesNumber: Sequelize.literal('likesNumber + 1') }
-    : { dislikesNumber: Sequelize.literal('dislikesNumber + 1') };
-
-  if (like.postUid) like.setPost(updateObj);
-  else if (like.commentUid) like.setComment(updateObj);
+  if (like.postUid) {
+    const post = await like.getPost();
+    if (like.isUpVote) post.likesNumber += 1;
+    else post.dislikesNumber += 1;
+  } else {
+    const comment = await like.getComment();
+    if (like.isUpVote) comment.likesNumber += 1;
+    else comment.dislikesNumber += 1;
+  }
 });
 
 Like.afterUpdate(async (like, options) => {
-  const updateObj = like.isUpVote
-    ? {
-        likesNumber: Sequelize.literal('likesNumber + 1'),
-        dislikesNumber: Sequelize.literal('dislikesNumber - 1'),
-      }
-    : {
-        dislikesNumber: Sequelize.literal('dislikesNumber + 1'),
-        likesNumber: Sequelize.literal('likesNumber - 1'),
-      };
-  if (like.postUid) like.setPost(updateObj);
-  else if (like.commentUid) like.setComment(updateObj);
+  if (like.postUid) {
+    const post = await like.getPost();
+    if (like.isUpVote) {
+      post.likesNumber += 1;
+      post.dislikesNumber -= 1;
+    } else {
+      post.likesNumber -= 1;
+      post.dislikesNumber += 1;
+    }
+  } else {
+    const comment = await like.getComment();
+    if (like.isUpVote) {
+      comment.likesNumber += 1;
+      comment.dislikesNumber -= 1;
+    } else {
+      comment.dislikesNumber += 1;
+      comment.likesNumber -= 1;
+    }
+  }
 });

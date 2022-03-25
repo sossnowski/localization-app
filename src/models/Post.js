@@ -20,6 +20,18 @@ const Post = db.define(
       type: Sequelize.DataTypes.TEXT,
       allowNull: false,
     },
+    likesNumber: {
+      type: Sequelize.DataTypes.INTEGER,
+      default: 0,
+    },
+    dislikesNumber: {
+      type: Sequelize.DataTypes.INTEGER,
+      default: 0,
+    },
+    commentNumber: {
+      type: Sequelize.DataTypes.INTEGER,
+      default: 0,
+    },
   },
   {
     indexes: [{ fields: ['createdAt'] }],
@@ -29,6 +41,7 @@ const Post = db.define(
 Post.hasMany(Like, {
   onDelete: 'cascade',
 });
+Like.belongsTo(Post);
 Post.hasMany(Comment, {
   onDelete: 'cascade',
 });

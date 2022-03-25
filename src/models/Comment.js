@@ -12,10 +12,23 @@ const Comment = db.define('comment', {
     type: Sequelize.DataTypes.STRING,
     allowNull: false,
   },
+  likesNumber: {
+    type: Sequelize.DataTypes.INTEGER,
+    default: 0,
+  },
+  dislikesNumber: {
+    type: Sequelize.DataTypes.INTEGER,
+    default: 0,
+  },
 });
 
 Comment.hasMany(Like, {
   onDelete: 'CASCADE',
 });
+Like.belongsTo(Comment);
 
 module.exports = Comment;
+
+Comment.afterCreate(async (comment, options) => {
+  comment.setPost({ commentNumber: Sequelize.literal('commentNumber + 1') });
+});

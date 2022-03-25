@@ -39,7 +39,7 @@ module.exports.getByUid = async (uid) => {
   return post;
 };
 
-module.exports.getFromLocalization = async (localization) => {
+module.exports.getFromLocalizations = async (localization) => {
   const posts = await Post.findAll({
     include: [
       {
@@ -49,6 +49,7 @@ module.exports.getFromLocalization = async (localization) => {
         },
       },
       { model: User, attributes: ['username', 'uid'] },
+      { model: Like, attributes: ['uid', 'userUid', 'isUpVote'] },
       Photo,
     ],
   });

@@ -1,23 +1,27 @@
 version: "3"
 
 services:
-  backend:
+  backend_devel:
     build: .
-    container_name: backend
-    hostname: backend
+    container_name: backend_devel
+    hostname: backend_devel
     networks:
       - spotfinder
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`api.splendorwrld.com`)"
-      - "traefik.http.routers.backend.entrypoints=websecure"
-      - "traefik.http.routers.backend.tls.certresolver=letsencryptresolver"
-      - "traefik.http.services.backend.loadbalancer.server.port=3005"
-
+      - "traefik.http.routers.backend_devel.rule=Host(`api.devel.splendorwrld.com`)"
+      - "traefik.http.routers.backend_devel.entrypoints=websecure"
+      - "traefik.http.routers.backend_devel.tls.certresolver=letsencryptresolver"
+      - "traefik.http.services.backend_devel.loadbalancer.server.port=3017"
 
     volumes:
-      - /mnt/volume-1/files:/spotfinder/pictures
+      - /mnt/volume-1/files-devel:/spotfinder/pictures
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
 
 networks:
   spotfinder:

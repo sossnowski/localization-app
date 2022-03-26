@@ -16,16 +16,12 @@ module.exports.add = async (data) => {
 };
 
 module.exports.getFromArea = async (points, categories) => {
-  const { a, b, c, d, e } = points;
+  const { minX, maxX, minY, maxY } = points;
   const contains = sequelize.fn(
     'ST_CONTAINS',
     sequelize.fn(
       'ST_POLYFROMTEXT',
-      `POLYGON((${a.split(',')[0]} ${a.split(',')[1]},${b.split(',')[0]} ${
-        b.split(',')[1]
-      },${c.split(',')[0]} ${c.split(',')[1]},${d.split(',')[0]} ${
-        d.split(',')[1]
-      },${e.split(',')[0]} ${e.split(',')[1]}))`
+      `POLYGON((${minX} ${maxY},${maxX} ${maxY},${maxX} ${minY},${minX} ${minY},${minX} ${maxY}))`
     ),
     sequelize.col('geometry')
   );
@@ -50,10 +46,10 @@ module.exports.getFromArea = async (points, categories) => {
   });
 
   return filterLocalizationsByCoordinates(allExtentLocalizations, {
-    a,
-    b,
-    c,
-    d,
+    minX,
+    maxX,
+    minY,
+    maxY,
   });
 };
 

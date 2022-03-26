@@ -1,6 +1,6 @@
 const multer = require('multer');
 const mime = require('mime');
-const { Op } = require('sequelize/types');
+const { Op } = require('sequelize');
 const Post = require('../models/Post');
 const Notification = require('../models/Notification');
 

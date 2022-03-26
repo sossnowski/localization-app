@@ -8,16 +8,14 @@ module.exports.filterLocalizationsByCoordinates = (
   const COLS = 15;
   const resultArray = {};
   const finalArray = [];
-  const xDelta =
-    Math.abs(extent.a.split(',')[0] - extent.b.split(',')[0]) / COLS;
-  const yDelta =
-    Math.abs(extent.a.split(',')[1] - extent.c.split(',')[1]) / ROWS;
+  const xDelta = Math.abs(extent.minX - extent.maxX) / COLS;
+  const yDelta = Math.abs(extent.maxY - extent.minY) / ROWS;
   for (const loc of allLocalizations) {
     const firstIndex = Math.round(
-      Math.abs(extent.a.split(',')[0] - loc.geometry.coordinates[0]) / xDelta
+      Math.abs(extent.minX - loc.geometry.coordinates[0]) / xDelta
     );
     const secondIndex = Math.round(
-      Math.abs(extent.a.split(',')[1] - loc.geometry.coordinates[1]) / yDelta
+      Math.abs(extent.maxY - loc.geometry.coordinates[1]) / yDelta
     );
     if (!resultArray[firstIndex]) {
       resultArray[firstIndex] = {};

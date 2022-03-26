@@ -34,3 +34,9 @@ Comment.afterCreate(async (comment, options) => {
   post.commentNumber += 1;
   post.save();
 });
+
+Comment.afterDestroy(async (comment, options) => {
+  const post = await comment.getPost();
+  post.commentNumber -= 1;
+  post.save();
+});

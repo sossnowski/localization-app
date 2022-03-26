@@ -1,6 +1,6 @@
 const Notification = require('../../models/Notification');
 
-module.exports.postLike = async (data, from, to) => {
+module.exports.postLike = async (data, to) => {
   const notification = await Notification.findOne({
     where: { text: `postUid:${data.postUid}`, userUid: to },
   });
@@ -22,7 +22,7 @@ module.exports.postLike = async (data, from, to) => {
   return newNotification;
 };
 
-module.exports.commentLike = async (data, from, to) => {
+module.exports.commentLike = async (data, to) => {
   const notification = await Notification.findOne({
     where: { text: `commentUid:${data.commentUid}`, userUid: to },
   });
@@ -44,9 +44,9 @@ module.exports.commentLike = async (data, from, to) => {
   return newNotification;
 };
 
-module.exports.addComment = async (data, from, to) => {
+module.exports.addComment = async (data, to) => {
   const notification = await Notification.findOne({
-    where: { text: `addComment:${data.commentUid}`, userUid: to },
+    where: { text: `addComment:${data.postUid}`, userUid: to },
   });
   if (notification) {
     notification.number += 1;
@@ -59,7 +59,7 @@ module.exports.addComment = async (data, from, to) => {
 
   const newNotification = await Notification.create({
     userUid: to,
-    text: `addComment:${data.commentUid}`,
+    text: `addComment:${data.postUid}`,
     username: data.username,
   });
 

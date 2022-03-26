@@ -18,7 +18,6 @@ module.exports.emitPostLikeEvent = async (io, data) => {
         isUpVote: data.like.isUpVote,
         postUid: data.like.postUid,
       },
-      data.actionUser.uid,
       personGotLike.userUid
     );
     sendNotification(notification, personGotLike.user.mobileToken);
@@ -44,7 +43,6 @@ module.exports.emitCommentLikeEvent = async (io, data) => {
         isUpVote: data.like.isUpVote,
         commentUid: comment.uid,
       },
-      data.actionUser.uid,
       comment.userUid
     );
     sendNotification(notification, comment.user.mobileToken);

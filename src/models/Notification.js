@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const db = require('../config/db');
 
 const Notification = db.define(
-  'notification',
+  'notificationup',
   {
     uid: {
       type: Sequelize.DataTypes.UUID,
@@ -12,11 +12,11 @@ const Notification = db.define(
     text: {
       type: Sequelize.DataTypes.STRING,
       allowNull: false,
-      // unique: true,
+      unique: true,
     },
     number: {
-      type: Sequelize.DataTypes.NUMBER,
-      default: 1,
+      type: Sequelize.DataTypes.INTEGER,
+      defaultValue: 1,
     },
     username: {
       type: Sequelize.DataTypes.STRING,
@@ -28,7 +28,7 @@ const Notification = db.define(
     },
   },
   {
-    indexes: [{ fields: ['updatedAt'] }],
+    indexes: [{ fields: ['text'] }],
   }
 );
 

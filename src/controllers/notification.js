@@ -1,46 +1,30 @@
 const Notification = require('../models/Notification');
-require('dotenv').config();
+
+const NOTIFICATIONS_PER_PAGE = 10;
 
 module.exports.getAll = (offset, userUid) => {
   const parsed = parseInt(offset);
   if (parsed) {
     return Notification.findAll({
-      where: { targetUid: userUid },
+      where: { userUid },
       order: [['updatedAt', 'desc']],
-      group: 'text',
       offset: parsed,
-      limit: parseInt(process.env.NOTIFICATIONS_PER_PAGE),
+      limit: parseInt(NOTIFICATIONS_PER_PAGE),
     });
   }
 
   return Notification.findAll({
-    where: { targetUid: userUid },
+    where: { userUid },
     order: [['updatedAt', 'desc']],
-    // group: 'text',
-    limit: parseInt(process.env.NOTIFICATIONS_PER_PAGE),
+    limit: parseInt(NOTIFICATIONS_PER_PAGE),
   });
 };
 
-module.exports.setNotificationAsSeen = async (uid, userUid) =>
+module.exports.setNotificationAsSeen = async (uid) =>
   Notification.update(
     { new: false },
     {
-      where: { uid, targetUid: userUid },
-    }
-  );
-
-module.exports.setAllCommentNotificationsAsSeen = async (uid) =>
-  Notification.update(
-    { new: false },
-    {
-      where: { text: [`commentUid:${uid}`, `addComment:${uid}`] },
-    }
-  );
-
-module.exports.setAllPostNotificationsAsSeen = async (uid) =>
-  Notification.update(
-    { new: false },
-    {
-      where: { text: `postUid:${uid}` },
+      where: { uid },
+      silent: true,
     }
   );

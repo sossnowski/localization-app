@@ -1,6 +1,8 @@
 const multer = require('multer');
 const mime = require('mime');
+const { Op } = require('sequelize/types');
 const Post = require('../models/Post');
+const Notification = require('../models/Notification');
 
 module.exports.isUserPostOwner = async (postUid, userUid) => {
   const post = await Post.findOne({
@@ -43,3 +45,13 @@ const cpUpload = upload.fields([
 ]);
 
 module.exports.fileUploader = cpUpload;
+
+module.exports.removeRelatedNotifications = async (postUid) => {
+  await Notification.destroy({
+    where: {
+      text: {
+        [Op.or]: [`postUid:${postUid}`, `addComment:${postUid}`],
+      },
+    },
+  });
+};

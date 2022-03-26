@@ -7,7 +7,10 @@ const Category = require('../models/Category');
 const Post = require('../models/Post');
 const Localization = require('../models/Localization');
 const CustomError = require('../helpers/error');
-const { isUserPostOwner } = require('../services/post');
+const {
+  isUserPostOwner,
+  removeRelatedNotifications,
+} = require('../services/post');
 const db = require('../config/db');
 const Photo = require('../models/Photo');
 const {
@@ -165,6 +168,8 @@ module.exports.deleteByUid = async (postUid, userUid) => {
   await Post.destroy({
     where: { uid: postUid },
   });
+
+  await removeRelatedNotifications(postToRemove.uid);
 
   if (localization.posts.length === 1)
     await Localization.destroy({

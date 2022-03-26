@@ -1,4 +1,5 @@
 const Comment = require('../models/Comment');
+const Notification = require('../models/Notification');
 
 module.exports.isUserCommentOwner = async (commentUid, userUid) => {
   const comment = await Comment.findOne({
@@ -8,4 +9,12 @@ module.exports.isUserCommentOwner = async (commentUid, userUid) => {
   });
 
   return comment?.userUid === userUid;
+};
+
+module.exports.removeRelatedNotifications = async (commentUid) => {
+  await Notification.destroy({
+    where: {
+      text: `commentUid:${commentUid}`,
+    },
+  });
 };

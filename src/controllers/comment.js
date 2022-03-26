@@ -3,7 +3,10 @@ const Like = require('../models/Like');
 const User = require('../models/User');
 const CustomError = require('../helpers/error');
 const { postExists } = require('../services/post');
-const { isUserCommentOwner } = require('../services/comment');
+const {
+  isUserCommentOwner,
+  removeRelatedNotifications,
+} = require('../services/comment');
 const Post = require('../models/Post');
 const Photo = require('../models/Photo');
 const Localization = require('../models/Localization');
@@ -67,6 +70,7 @@ module.exports.deleteByUid = async (commentUid, userUid) => {
   await Comment.destroy({
     where: { uid: commentUid },
   });
+  await removeRelatedNotifications(commentUid);
 };
 
 module.exports.getLikes = async (commentUid) => {

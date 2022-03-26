@@ -23,6 +23,9 @@ module.exports.filterLocalizationsByCoordinates = (
       resultArray[firstIndex] = {};
       resultArray[firstIndex][secondIndex] = loc;
       finalArray.push({ ...loc, numberOfPlaces: 1 });
+    } else if (!resultArray[firstIndex][secondIndex]) {
+      resultArray[firstIndex][secondIndex] = loc;
+      finalArray.push({ ...loc, numberOfPlaces: 1 });
     } else if (resultArray[firstIndex][secondIndex]) {
       finalArray.map((elem) =>
         elem.uid === resultArray[firstIndex][secondIndex].uid

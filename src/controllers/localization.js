@@ -28,18 +28,15 @@ module.exports.getFromArea = async (points, categories) => {
 
   const allExtentLocalizations = await Localization.findAll({
     raw: true,
-    attributes: ['uid', 'geometry'],
+    attributes: ['uid', 'geometry', 'city'],
     where: contains,
     include: [
       {
         model: Category,
+        attributes: ['name'],
         where: {
           name: categories,
         },
-      },
-      {
-        model: Post,
-        attributes: [],
       },
     ],
     group: ['uid'],

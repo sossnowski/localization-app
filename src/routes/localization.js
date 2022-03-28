@@ -7,6 +7,7 @@ const {
   get,
   getFromArea,
   getAllGroupedByPlace,
+  getFromAreaMobile,
 } = require('../controllers/localization');
 const { auth } = require('../services/auth');
 const validationRules = require('../validation/localization');
@@ -51,6 +52,23 @@ router.get('/extent/:minX/:maxX/:minY/:maxY', auth, async (req, res, next) => {
     next(error);
   }
 });
+
+router.get(
+  '/mobile/extent/:minX/:maxX/:minY/:maxY',
+  auth,
+  async (req, res, next) => {
+    try {
+      const localization = await getFromAreaMobile(
+        req.params,
+        req.query.categories
+      );
+
+      res.status(200).json(localization);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 router.post('/', auth, validate(validationRules), async (req, res, next) => {
   try {

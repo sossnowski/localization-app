@@ -81,7 +81,7 @@ module.exports.deleteByUid = async (commentUid, userUid) => {
       { transaction: t }
     );
     Post.decrement(
-      ['commentNumber', '1'],
+      'commentNumber',
       { where: { uid: comment.postUid } },
       { transaction: t }
     );

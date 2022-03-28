@@ -153,26 +153,34 @@ module.exports.deleteByUid = async (postUid, userUid) => {
     include: [{ model: Post, attributes: ['uid'] }],
   });
 
-  if (postToRemove.photos.length) {
-    try {
-      fs.unlinkSync(
-        `${path.dirname(require.main.filename)}/pictures/${
-          postToRemove.photos[0].filename.split('_')[0]
-        }/${postToRemove.photos[0].filename}`
+  await db.transaction(async (t) => {
+    await Post.destroy(
+      {
+        where: { uid: postUid },
+      },
+      { transaction: t }
+    );
+
+    await removeRelatedNotifications(postToRemove.uid, t);
+
+    if (localization.posts.length === 1)
+      await Localization.destroy(
+        {
+          where: { uid: localization.uid },
+        },
+        { transaction: t }
       );
-    } catch (err) {
-      console.log(err);
+
+    if (postToRemove.photos.length) {
+      try {
+        fs.unlinkSync(
+          `${path.dirname(require.main.filename)}/pictures/${
+            postToRemove.photos[0].filename.split('_')[0]
+          }/${postToRemove.photos[0].filename}`
+        );
+      } catch (err) {
+        console.log(err);
+      }
     }
-  }
-
-  await Post.destroy({
-    where: { uid: postUid },
   });
-
-  await removeRelatedNotifications(postToRemove.uid);
-
-  if (localization.posts.length === 1)
-    await Localization.destroy({
-      where: { uid: localization.uid },
-    });
 };

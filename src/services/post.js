@@ -46,12 +46,15 @@ const cpUpload = upload.fields([
 
 module.exports.fileUploader = cpUpload;
 
-module.exports.removeRelatedNotifications = async (postUid) => {
-  await Notification.destroy({
-    where: {
-      text: {
-        [Op.or]: [`postUid:${postUid}`, `addComment:${postUid}`],
+module.exports.removeRelatedNotifications = async (postUid, t) => {
+  await Notification.destroy(
+    {
+      where: {
+        text: {
+          [Op.or]: [`postUid:${postUid}`, `addComment:${postUid}`],
+        },
       },
     },
-  });
+    { transaction: t }
+  );
 };

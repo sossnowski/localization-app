@@ -1,3 +1,4 @@
+const db = require('../config/db');
 const Comment = require('../models/Comment');
 const Like = require('../models/Like');
 const User = require('../models/User');
@@ -66,11 +67,26 @@ module.exports.update = async (commentData, userUid) => {
 module.exports.deleteByUid = async (commentUid, userUid) => {
   const isAllowedToRemove = await isUserCommentOwner(commentUid, userUid);
   if (!isAllowedToRemove) throw new CustomError(400, 'Bad Request');
-
-  await Comment.destroy({
+  const comment = await Comment.findOne({
     where: { uid: commentUid },
+    raw: true,
   });
-  await removeRelatedNotifications(commentUid);
+
+  await db.transaction(async (t) => {
+    await postExists.save;
+    await Comment.destroy(
+      {
+        where: { uid: commentUid },
+      },
+      { transaction: t }
+    );
+    Post.decrement(
+      ['commentNumber', '1'],
+      { where: { uid: comment.postUid } },
+      { transaction: t }
+    );
+    await removeRelatedNotifications(commentUid, t);
+  });
 };
 
 module.exports.getLikes = async (commentUid) => {

@@ -22,24 +22,22 @@ module.exports.getPostComments = async (postUid) => {
 };
 
 module.exports.getPostByComment = async (commentUid) => {
-  const comment = await Comment.findOne({
+  const post = await Comment.getPost({
     where: { uid: commentUid },
     include: [
+      { model: User, attributes: ['uid', 'username'] },
       {
-        model: Post,
-        include: [
-          Localization,
-          { model: User, attributes: ['username', 'uid'] },
-          Like,
-          Photo,
-          { model: Comment, include: [Like] },
-        ],
+        model: Comment,
+        attributes: ['uid', 'text', 'createdAt'],
+        include: [{ model: Like, attributes: ['isUpVote', 'uid', 'userUid'] }],
       },
+      { model: Photo, attributes: ['uid', 'filename'] },
+      { model: Like, attributes: ['uid', 'isUpVote', 'userUid'] },
     ],
   });
-  if (!comment) throw new CustomError(404, 'Not found post');
+  if (!post) throw new CustomError(404, 'Not found post');
 
-  return comment;
+  return post;
 };
 
 module.exports.add = async (commentData, userUid) => {

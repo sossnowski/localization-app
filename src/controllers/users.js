@@ -18,7 +18,7 @@ module.exports.register = async (user) => {
     },
   });
 
-  if (registeredUser) throw new CustomError(400, 'User exist');
+  if (registeredUser) throw new CustomError(409, 'User exist');
 
   const hashedPassword = await generatePassword(user.password);
 

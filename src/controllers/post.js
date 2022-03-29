@@ -29,11 +29,17 @@ module.exports.getByUid = async (uid) => {
   const post = await Post.findOne({
     where: { uid },
     include: [
-      Comment,
-      Like,
-      Localization,
-      { model: User, attributes: ['username', 'uid'] },
-      Photo,
+      { model: User, attributes: ['uid', 'username'] },
+      {
+        model: Comment,
+        attributes: ['uid', 'text', 'createdAt'],
+        include: [
+          { model: Like, attributes: ['isUpVote', 'uid', 'userUid'] },
+          { model: User, attributes: ['uid', 'username'] },
+        ],
+      },
+      { model: Photo, attributes: ['uid', 'filename'] },
+      { model: Like, attributes: ['uid', 'isUpVote', 'userUid'] },
     ],
   });
   if (!post) throw new CustomError(404, 'Not found post');

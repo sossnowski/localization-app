@@ -10,7 +10,6 @@ const {
 } = require('../services/comment');
 const Post = require('../models/Post');
 const Photo = require('../models/Photo');
-const Localization = require('../models/Localization');
 
 module.exports.getPostComments = async (postUid) => {
   const comments = await Comment.findAll({

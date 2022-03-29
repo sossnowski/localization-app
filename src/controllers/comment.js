@@ -31,12 +31,14 @@ module.exports.getPostByComment = async (commentUid) => {
       {
         model: Comment,
         attributes: ['uid', 'text', 'createdAt'],
-        include: [{ model: Like, attributes: ['isUpVote', 'uid', 'userUid'] }],
+        include: [
+          { model: Like, attributes: ['isUpVote', 'uid', 'userUid'] },
+          { model: User, attributes: ['uid', 'username'] },
+        ],
       },
       { model: Photo, attributes: ['uid', 'filename'] },
       { model: Like, attributes: ['uid', 'isUpVote', 'userUid'] },
     ],
-    raw: true,
   });
 
   if (!post) throw new CustomError(404, 'Not found post');

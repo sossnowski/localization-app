@@ -28,18 +28,50 @@ module.exports.getFromArea = async (points, categories) => {
 
   const allExtentLocalizations = await Localization.findAll({
     raw: true,
-    attributes: ['uid', 'geometry'],
+    attributes: ['uid', 'geometry', 'city'],
     where: contains,
     include: [
       {
         model: Category,
+        attributes: ['name'],
         where: {
           name: categories,
         },
       },
+    ],
+    group: ['uid'],
+  });
+
+  return filterLocalizationsByCoordinates(allExtentLocalizations, {
+    minX,
+    maxX,
+    minY,
+    maxY,
+  });
+};
+
+module.exports.getFromAreaMobile = async (points, categories) => {
+  const { minX, maxX, minY, maxY } = points;
+  const contains = sequelize.fn(
+    'ST_CONTAINS',
+    sequelize.fn(
+      'ST_POLYFROMTEXT',
+      `POLYGON((${minX} ${maxY},${maxX} ${maxY},${maxX} ${minY},${minX} ${minY},${minX} ${maxY}))`
+    ),
+    sequelize.col('geometry')
+  );
+
+  const allExtentLocalizations = await Localization.findAll({
+    raw: true,
+    attributes: ['uid', 'geometry', 'city'],
+    where: contains,
+    include: [
       {
-        model: Post,
-        attributes: [],
+        model: Category,
+        attributes: ['name'],
+        where: {
+          name: categories,
+        },
       },
     ],
     group: ['uid'],

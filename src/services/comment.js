@@ -11,10 +11,13 @@ module.exports.isUserCommentOwner = async (commentUid, userUid) => {
   return comment?.userUid === userUid;
 };
 
-module.exports.removeRelatedNotifications = async (commentUid) => {
-  await Notification.destroy({
-    where: {
-      text: `commentUid:${commentUid}`,
+module.exports.removeRelatedNotifications = async (commentUid, t) => {
+  await Notification.destroy(
+    {
+      where: {
+        text: `commentUid:${commentUid}`,
+      },
     },
-  });
+    { transaction: t }
+  );
 };

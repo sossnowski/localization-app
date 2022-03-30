@@ -29,11 +29,18 @@ module.exports.getByUid = async (uid) => {
   const post = await Post.findOne({
     where: { uid },
     include: [
-      Comment,
-      Like,
-      Localization,
-      { model: User, attributes: ['username', 'uid'] },
-      Photo,
+      { model: User, attributes: ['uid', 'username'] },
+      { model: Localization, attributes: ['uid', 'geometry'] },
+      {
+        model: Comment,
+        attributes: ['uid', 'text', 'createdAt'],
+        include: [
+          { model: Like, attributes: ['isUpVote', 'uid', 'userUid'] },
+          { model: User, attributes: ['uid', 'username'] },
+        ],
+      },
+      { model: Photo, attributes: ['uid', 'filename'] },
+      { model: Like, attributes: ['uid', 'isUpVote', 'userUid'] },
     ],
   });
   if (!post) throw new CustomError(404, 'Not found post');
@@ -153,26 +160,34 @@ module.exports.deleteByUid = async (postUid, userUid) => {
     include: [{ model: Post, attributes: ['uid'] }],
   });
 
-  if (postToRemove.photos.length) {
-    try {
-      fs.unlinkSync(
-        `${path.dirname(require.main.filename)}/pictures/${
-          postToRemove.photos[0].filename.split('_')[0]
-        }/${postToRemove.photos[0].filename}`
+  await db.transaction(async (t) => {
+    await Post.destroy(
+      {
+        where: { uid: postUid },
+      },
+      { transaction: t }
+    );
+
+    await removeRelatedNotifications(postToRemove.uid, t);
+
+    if (localization.posts.length === 1)
+      await Localization.destroy(
+        {
+          where: { uid: localization.uid },
+        },
+        { transaction: t }
       );
-    } catch (err) {
-      console.log(err);
+
+    if (postToRemove.photos.length) {
+      try {
+        fs.unlinkSync(
+          `${path.dirname(require.main.filename)}/pictures/${
+            postToRemove.photos[0].filename.split('_')[0]
+          }/${postToRemove.photos[0].filename}`
+        );
+      } catch (err) {
+        console.log(err);
+      }
     }
-  }
-
-  await Post.destroy({
-    where: { uid: postUid },
   });
-
-  await removeRelatedNotifications(postToRemove.uid);
-
-  if (localization.posts.length === 1)
-    await Localization.destroy({
-      where: { uid: localization.uid },
-    });
 };

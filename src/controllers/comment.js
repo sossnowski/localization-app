@@ -1,3 +1,4 @@
+const db = require('../config/db');
 const Comment = require('../models/Comment');
 const Like = require('../models/Like');
 const User = require('../models/User');
@@ -23,22 +24,27 @@ module.exports.getPostComments = async (postUid) => {
 module.exports.getPostByComment = async (commentUid) => {
   const comment = await Comment.findOne({
     where: { uid: commentUid },
+  });
+  const post = await comment.getPost({
     include: [
+      { model: User, attributes: ['uid', 'username'] },
+      { model: Localization, attributes: ['uid', 'geometry'] },
       {
-        model: Post,
+        model: Comment,
+        attributes: ['uid', 'text', 'createdAt'],
         include: [
-          Localization,
-          { model: User, attributes: ['username', 'uid'] },
-          Like,
-          Photo,
-          { model: Comment, include: [Like] },
+          { model: Like, attributes: ['isUpVote', 'uid', 'userUid'] },
+          { model: User, attributes: ['uid', 'username'] },
         ],
       },
+      { model: Photo, attributes: ['uid', 'filename'] },
+      { model: Like, attributes: ['uid', 'isUpVote', 'userUid'] },
     ],
   });
-  if (!comment) throw new CustomError(404, 'Not found post');
 
-  return comment;
+  if (!post) throw new CustomError(404, 'Not found post');
+
+  return post;
 };
 
 module.exports.add = async (commentData, userUid) => {
@@ -66,11 +72,26 @@ module.exports.update = async (commentData, userUid) => {
 module.exports.deleteByUid = async (commentUid, userUid) => {
   const isAllowedToRemove = await isUserCommentOwner(commentUid, userUid);
   if (!isAllowedToRemove) throw new CustomError(400, 'Bad Request');
-
-  await Comment.destroy({
+  const comment = await Comment.findOne({
     where: { uid: commentUid },
+    raw: true,
   });
-  await removeRelatedNotifications(commentUid);
+
+  await db.transaction(async (t) => {
+    await postExists.save;
+    await Comment.destroy(
+      {
+        where: { uid: commentUid },
+      },
+      { transaction: t }
+    );
+    Post.decrement(
+      'commentNumber',
+      { where: { uid: comment.postUid } },
+      { transaction: t }
+    );
+    await removeRelatedNotifications(commentUid, t);
+  });
 };
 
 module.exports.getLikes = async (commentUid) => {

@@ -10,6 +10,7 @@ const {
 } = require('../services/comment');
 const Post = require('../models/Post');
 const Photo = require('../models/Photo');
+const Localization = require('../models/Localization');
 
 module.exports.getPostComments = async (postUid) => {
   const comments = await Comment.findAll({
@@ -27,6 +28,7 @@ module.exports.getPostByComment = async (commentUid) => {
   const post = await comment.getPost({
     include: [
       { model: User, attributes: ['uid', 'username'] },
+      { model: Localization, attributes: ['uid', 'geometry'] },
       {
         model: Comment,
         attributes: ['uid', 'text', 'createdAt'],

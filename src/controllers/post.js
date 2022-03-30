@@ -30,6 +30,7 @@ module.exports.getByUid = async (uid) => {
     where: { uid },
     include: [
       { model: User, attributes: ['uid', 'username'] },
+      { model: Localization, attributes: ['uid', 'geometry'] },
       {
         model: Comment,
         attributes: ['uid', 'text', 'createdAt'],

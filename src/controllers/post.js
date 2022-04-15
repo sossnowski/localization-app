@@ -17,6 +17,8 @@ const {
   getLocalizationNameByCoordinates,
 } = require('../services/localization');
 
+const POSTS_PER_REQUEST = 10;
+
 module.exports.getAll = async () => {
   const posts = await Post.findAll({
     include: [Category, User, Comment, Like],
@@ -25,7 +27,8 @@ module.exports.getAll = async () => {
   return posts;
 };
 
-module.exports.getByUid = async (uid) => {
+module.exports.getByUid = async (uid, offset) => {
+  const parsed = parseInt(offset);
   const post = await Post.findOne({
     where: { uid },
     include: [
@@ -42,28 +45,13 @@ module.exports.getByUid = async (uid) => {
       { model: Photo, attributes: ['uid', 'filename'] },
       { model: Like, attributes: ['uid', 'isUpVote', 'userUid'] },
     ],
+    order: [['likesNumber', 'desc']],
+    offset: parsed || 0,
+    limit: parseInt(POSTS_PER_REQUEST),
   });
   if (!post) throw new CustomError(404, 'Not found post');
 
   return post;
-};
-
-module.exports.getFromLocalization = async (localization) => {
-  const posts = await Post.findAll({
-    include: [
-      {
-        model: Localization,
-        where: {
-          uid: localization,
-        },
-      },
-      { model: User, attributes: ['username', 'uid'] },
-      { model: Like, attributes: ['uid', 'userUid', 'isUpVote'] },
-      Photo,
-    ],
-  });
-
-  return posts;
 };
 
 module.exports.add = async (postData, files, userUid) => {

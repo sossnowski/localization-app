@@ -12,10 +12,16 @@ const Post = require('../models/Post');
 const Photo = require('../models/Photo');
 const Localization = require('../models/Localization');
 
-module.exports.getPostComments = async (postUid) => {
+const COMMENTS_PER_REQEST = 10;
+
+module.exports.getPostComments = async (postUid, offset) => {
+  const parsed = parseInt(offset);
   const comments = await Comment.findAll({
     where: { postUid },
     include: [{ model: User, attributes: ['username', 'uid'] }, Like],
+    order: [['likesNumber', 'desc']],
+    offset: parsed || 0,
+    limit: parseInt(COMMENTS_PER_REQEST),
   });
 
   return comments;

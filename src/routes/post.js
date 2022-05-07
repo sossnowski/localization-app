@@ -39,9 +39,9 @@ router.get('/:uid', async (req, res, next) => {
   }
 });
 
-router.get('/localizations/:uid', async (req, res, next) => {
+router.get('/localizations/:uid/:offset', async (req, res, next) => {
   try {
-    const posts = await getFromLocalization(req.params.uid);
+    const posts = await getFromLocalization(req.params.uid, req.params.offset);
 
     res.status(200).json(posts);
   } catch (error) {

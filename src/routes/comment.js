@@ -14,9 +14,12 @@ const { emitCommentEvent } = require('../services/socket/comment');
 const validationRules = require('../validation/comment');
 const validate = require('../validation/main');
 
-router.get('/:postUid', auth, async (req, res, next) => {
+router.get('/:postUid/:offset', auth, async (req, res, next) => {
   try {
-    const comments = await getPostComments(req.params.postUid);
+    const comments = await getPostComments(
+      req.params.postUid,
+      req.params.offset
+    );
 
     res.status(200).json(comments);
   } catch (error) {

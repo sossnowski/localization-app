@@ -17,6 +17,8 @@ const {
   getLocalizationNameByCoordinates,
 } = require('../services/localization');
 
+const POSTS_PER_REQEST = 10;
+
 module.exports.getAll = async () => {
   const posts = await Post.findAll({
     include: [Category, User, Comment, Like],
@@ -48,7 +50,8 @@ module.exports.getByUid = async (uid) => {
   return post;
 };
 
-module.exports.getFromLocalization = async (localization) => {
+module.exports.getFromLocalization = async (localization, offset) => {
+  const parsed = parseInt(offset);
   const posts = await Post.findAll({
     include: [
       {
@@ -61,6 +64,12 @@ module.exports.getFromLocalization = async (localization) => {
       { model: Like, attributes: ['uid', 'userUid', 'isUpVote'] },
       Photo,
     ],
+    order: [
+      ['likesNumber', 'desc'],
+      ['commentNumber', 'desc'],
+    ],
+    offset: parsed || 0,
+    limit: parseInt(POSTS_PER_REQEST),
   });
 
   return posts;

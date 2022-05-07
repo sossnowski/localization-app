@@ -60,6 +60,8 @@ module.exports.login = async (userLoginData) => {
       isAdmin: user.isAdmin,
       isSuperAdmin: user.isSuperAdmin,
       configuration: user.configuration,
+      mobileToken: user.mobileToken,
+      mobileOS: user.mobileOS,
     },
   };
 };

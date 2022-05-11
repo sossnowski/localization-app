@@ -27,7 +27,7 @@ router.get('/:postUid/:offset', auth, async (req, res, next) => {
   }
 });
 
-router.get('/withPostData/:commentUid', auth, async (req, res, next) => {
+router.get('/withPost/byCommentUid/:commentUid', auth, async (req, res, next) => {
   try {
     const comments = await getPostByComment(req.params.commentUid);
 

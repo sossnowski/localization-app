@@ -59,7 +59,7 @@ const generateNotificationText = (notification, lang) => {
     case 'postUid':
       return `${subtitles.user_} ${
         notification.username
-      } ${isThereMoreUsersReacted(notification.number)} ${
+      } ${isThereMoreUsersReacted(notification.number, lang)} ${
         notification.number > 1
           ? subtitles.reactPostPlural_
           : subtitles.reactPost_
@@ -68,7 +68,7 @@ const generateNotificationText = (notification, lang) => {
     case 'addComment':
       return `${subtitles.user_} ${
         notification.username
-      } ${isThereMoreUsersReacted(notification.number)} ${
+      } ${isThereMoreUsersReacted(notification.number, lang)} ${
         notification.number > 1
           ? subtitles.commentedPlural_
           : subtitles.commented_

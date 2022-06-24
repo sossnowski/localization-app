@@ -19,7 +19,7 @@ module.exports.emitCommentEvent = async (io, data) => {
     },
     commentedPostOwner.userUid
   );
-  sendNotification(notification, commentedPostOwner.user.mobileToken);
+  sendNotification(notification, commentedPostOwner.user);
   io.to(commentedPostOwner.userUid).emit('notification', notification);
 
   io.sockets

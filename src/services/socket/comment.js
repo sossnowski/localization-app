@@ -7,7 +7,7 @@ module.exports.emitCommentEvent = async (io, data) => {
   const commentedPostOwner = await Post.findOne({
     where: { uid: data.comment.postUid },
     attributes: ['userUid'],
-    include: { model: User, attributes: ['mobileToken'] },
+    include: { model: User, attributes: ['mobileToken', 'configuration'] },
   });
 
   if (commentedPostOwner.userUid === data.actionUser.uid) return;

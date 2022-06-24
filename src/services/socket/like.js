@@ -8,7 +8,7 @@ module.exports.emitPostLikeEvent = async (io, data) => {
   const personGotLike = await Post.findOne({
     where: { uid: data.like.postUid },
     attributes: ['userUid'],
-    include: { model: User, attributes: ['mobileToken'] },
+    include: { model: User, attributes: ['mobileToken', 'configuration'] },
   });
 
   if (personGotLike.userUid !== data.actionUser.uid) {
@@ -32,7 +32,7 @@ module.exports.emitCommentLikeEvent = async (io, data) => {
     where: { uid: data.like.commentUid },
     include: [
       { model: Post, attributes: ['uid', 'userUid'] },
-      { model: User, attributes: ['mobileToken'] },
+      { model: User, attributes: ['mobileToken', 'configuration'] },
     ],
   });
 
@@ -45,7 +45,7 @@ module.exports.emitCommentLikeEvent = async (io, data) => {
       },
       comment.userUid
     );
-    sendNotification(notification, comment.user.mobileToken);
+    sendNotification(notification, comment.user);
     io.to(comment.userUid).emit('notification', notification);
   }
 

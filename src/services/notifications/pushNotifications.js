@@ -79,11 +79,11 @@ const generateNotificationText = (notification, lang) => {
 };
 
 module.exports.sendNotification = async (notification, recipentData) => {
-  const { token, configuration } = recipentData;
+  const { mobileToken, configuration } = recipentData;
   const lang = configuration?.language || 'pl';
-  if (!token || !notification) return;
+  if (!mobileToken || !notification) return;
   const message = {
-    token,
+    mobileToken,
     notification: {
       title: 'SpotFinder!',
       body: generateNotificationText(notification, lang),

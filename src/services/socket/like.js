@@ -20,7 +20,7 @@ module.exports.emitPostLikeEvent = async (io, data) => {
       },
       personGotLike.userUid
     );
-    sendNotification(notification, personGotLike.user.mobileToken);
+    sendNotification(notification, personGotLike.user);
     io.to(personGotLike.userUid).emit('notification', notification);
   }
 

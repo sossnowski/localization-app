@@ -39,6 +39,8 @@ app.use((req, res, next) => {
   next();
 });
 seedCategories();
+app.use('/mapStyles', express.static('mapStyles/mapStyle.json'));
+app.use('/font/tmp/:type/:range/font.pbf', express.static('mapStyles/font.pbf'));
 app.use('/pictures', express.static('pictures'));
 // app.use('/init', initRoutes);
 app.use('/user', userRoutes);

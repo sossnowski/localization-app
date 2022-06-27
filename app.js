@@ -1,11 +1,13 @@
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const compression = require('compression');
+const morgan = require('morgan');
 require('dotenv').config();
 
 const app = express();
 
 app.use(compression());
+app.use(morgan('dev'));
 
 const userRoutes = require('./src/routes/user');
 const postRoutes = require('./src/routes/post');
@@ -39,6 +41,8 @@ app.use((req, res, next) => {
   next();
 });
 seedCategories();
+app.use('/mapStyles', express.static('mapStyle.json'));
+app.use('/font/tmp/:type/:range/font.pbf', express.static('font.pbf'));
 app.use('/pictures', express.static('pictures'));
 // app.use('/init', initRoutes);
 app.use('/user', userRoutes);

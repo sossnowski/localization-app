@@ -1,0 +1,33 @@
+{
+    "tilejson": "2.2.0",
+    "attribution": "<a href='http://openstreetmap.org'>Siema</a>",
+    "version": 8,
+    "name": "Land",
+    "sources": {
+        "map": {
+            "type": "raster",
+            "tiles": [
+                "https://tiles.devel3.azure.hawk-e.com.pl/mbOutdoors/{z}/{x}/{y}.png"
+            ],
+            "tileSize": 512,
+            "minzoom": 1,
+            "maxzoom": 18
+        }
+    },
+    "layers": [
+        {
+            "id": "map",
+            "type": "raster",
+            "source": "map",
+            "paint": {
+                "raster-fade-duration": 150
+            }
+        }
+    ],
+    "center": [
+        19.4,
+        51.6,
+        8
+    ],
+    "glyphs": "https://api.devel.spot-finder.app/font/tmp/{fontstack}/{range}/font.pbf"
+}

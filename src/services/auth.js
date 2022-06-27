@@ -15,14 +15,10 @@ module.exports.auth = (req, res, next) => {
 };
 
 module.exports.generateToken = (data) =>
-  jwt.sign(data, process.env.JWT_KEY, {
-    expiresIn: process.env.TOKEN_EXPIRED,
-  });
+  jwt.sign(data, process.env.JWT_KEY);
 
 module.exports.generateConfirmationToken = (data) =>
-  jwt.sign(data, process.env.CONFIRMATION_KEY, {
-    expiresIn: process.env.CONFIRMATION_EXPIRED,
-  });
+  jwt.sign(data, process.env.CONFIRMATION_KEY);
 
 module.exports.confirmationAuth = (token) => {
   try {

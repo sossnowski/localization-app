@@ -55,7 +55,6 @@ router.get('/extent/:minX/:maxX/:minY/:maxY', auth, async (req, res, next) => {
 
 router.get(
   '/mobile/extent/:minX/:maxX/:minY/:maxY',
-  auth,
   async (req, res, next) => {
     try {
       const localization = await getFromAreaMobile(

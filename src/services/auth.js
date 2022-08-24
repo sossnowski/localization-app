@@ -14,8 +14,7 @@ module.exports.auth = (req, res, next) => {
   }
 };
 
-module.exports.generateToken = (data) =>
-  jwt.sign(data, process.env.JWT_KEY);
+module.exports.generateToken = (data) => jwt.sign(data, process.env.JWT_KEY);
 
 module.exports.generateConfirmationToken = (data) =>
   jwt.sign(data, process.env.CONFIRMATION_KEY);

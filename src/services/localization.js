@@ -4,8 +4,8 @@ module.exports.filterLocalizationsByCoordinates = (
   allLocalizations,
   extent
 ) => {
-  const ROWS = 8;
-  const COLS = 15;
+  const ROWS = 14;
+  const COLS = 8;
   const resultArray = {};
   const finalArray = [];
   const xDelta = Math.abs(extent.minX - extent.maxX) / COLS;

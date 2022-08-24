@@ -17,6 +17,15 @@ const categories = [
     name: 'sport',
   },
   {
+    name: 'camping',
+  },
+  {
+    name: 'tips',
+  },
+  {
+    name: 'accommodation',
+  },
+  {
     name: 'other',
   },
 ];

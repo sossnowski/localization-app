@@ -53,21 +53,18 @@ router.get('/extent/:minX/:maxX/:minY/:maxY', auth, async (req, res, next) => {
   }
 });
 
-router.get(
-  '/mobile/extent/:minX/:maxX/:minY/:maxY',
-  async (req, res, next) => {
-    try {
-      const localization = await getFromAreaMobile(
-        req.params,
-        req.query.categories
-      );
+router.get('/mobile/extent/:minX/:maxX/:minY/:maxY', async (req, res, next) => {
+  try {
+    const localization = await getFromAreaMobile(
+      req.params,
+      req.query.categories
+    );
 
-      res.status(200).json(localization);
-    } catch (error) {
-      next(error);
-    }
+    res.status(200).json(localization);
+  } catch (error) {
+    next(error);
   }
-);
+});
 
 router.post('/', auth, validate(validationRules), async (req, res, next) => {
   try {

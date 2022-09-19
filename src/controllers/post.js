@@ -75,6 +75,69 @@ module.exports.getFromLocalization = async (localization, offset) => {
   return posts;
 };
 
+module.exports.getFromLocalizationTimeOrder = async (localization, offset) => {
+  const parsed = parseInt(offset);
+  const posts = await Post.findAll({
+    include: [
+      {
+        model: Localization,
+        where: {
+          uid: localization,
+        },
+      },
+      { model: User, attributes: ['username', 'uid'] },
+      { model: Like, attributes: ['uid', 'userUid', 'isUpVote'] },
+      Photo,
+    ],
+    order: [['createdAt', 'desc']],
+    offset: parsed || 0,
+    limit: parseInt(POSTS_PER_REQEST),
+  });
+
+  return posts;
+};
+
+module.exports.getBestPosts = async (offset) => {
+  const parsed = parseInt(offset);
+  const posts = await Post.findAll({
+    include: [
+      {
+        model: Localization,
+      },
+      { model: User, attributes: ['username', 'uid'] },
+      { model: Like, attributes: ['uid', 'userUid', 'isUpVote'] },
+      Photo,
+    ],
+    order: [
+      ['likesNumber', 'desc'],
+      ['commentNumber', 'desc'],
+    ],
+    offset: parsed || 0,
+    limit: parseInt(POSTS_PER_REQEST),
+  });
+
+  return posts;
+};
+
+module.exports.getNewestPosts = async (offset) => {
+  const parsed = parseInt(offset);
+  const posts = await Post.findAll({
+    include: [
+      {
+        model: Localization,
+      },
+      { model: User, attributes: ['username', 'uid'] },
+      { model: Like, attributes: ['uid', 'userUid', 'isUpVote'] },
+      Photo,
+    ],
+    order: [['createdAt', 'desc']],
+    offset: parsed || 0,
+    limit: parseInt(POSTS_PER_REQEST),
+  });
+
+  return posts;
+};
+
 module.exports.add = async (postData, files, userUid) => {
   const geometry = JSON.parse(postData.geometry);
   if (!postData.city || postData.city === '')

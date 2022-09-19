@@ -10,6 +10,9 @@ const {
   getByUid,
   deleteByUid,
   addToLocalization,
+  getFromLocalizationTimeOrder,
+  getBestPosts,
+  getNewestPosts,
 } = require('../controllers/post');
 const { fileUploader } = require('../services/post');
 const { auth } = require('../services/auth');
@@ -39,9 +42,57 @@ router.get('/:uid', async (req, res, next) => {
   }
 });
 
+// get posts from localization ordered by likes number !!! to remove !!!
 router.get('/localizations/:uid/:offset', async (req, res, next) => {
   try {
     const posts = await getFromLocalization(req.params.uid, req.params.offset);
+
+    res.status(200).json(posts);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// get posts from localization ordered by likes number
+router.get('/localization/:uid/:offset', async (req, res, next) => {
+  try {
+    const posts = await getFromLocalization(req.params.uid, req.params.offset);
+
+    res.status(200).json(posts);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// get posts from localization ordered by creation time
+router.get('/localization/byTime/:uid/:offset', async (req, res, next) => {
+  try {
+    const posts = await getFromLocalizationTimeOrder(
+      req.params.uid,
+      req.params.offset
+    );
+
+    res.status(200).json(posts);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// get most liked posts
+router.get('/bestOfAll/:offset', async (req, res, next) => {
+  try {
+    const posts = await getBestPosts(req.params.offset);
+
+    res.status(200).json(posts);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// get newest posts
+router.get('/newest/:offset', async (req, res, next) => {
+  try {
+    const posts = await getNewestPosts(req.params.offset);
 
     res.status(200).json(posts);
   } catch (error) {

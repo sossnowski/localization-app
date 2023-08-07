@@ -16,6 +16,7 @@ const localizationRoutes = require('./src/routes/localization');
 const categoryRoutes = require('./src/routes/category');
 const notificationRoutes = require('./src/routes/notification');
 const { seedCategories } = require('./src/config/categorySeed');
+const db = require('./src/config/db');
 
 const limiter = rateLimit({
   windowMs: 1 * 1000, // ms
@@ -38,7 +39,9 @@ app.use((req, res, next) => {
   }
   next();
 });
-seedCategories();
+db.sync({ alter: true }).then(() => {
+  seedCategories();
+});
 app.use('/mapStyles', express.static('mapStyles/mapStyle.json'));
 app.use(
   '/font/tmp/:type/:range/font.pbf',

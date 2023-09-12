@@ -39,3 +39,23 @@ module.exports.addCommentLike = async (commentUid, isUpVote, userUid) => {
   if (result) throw new CustomError(400, 'Bad Request');
   return Like.create({ isUpVote, commentUid, userUid });
 };
+
+module.exports.setTripLike = async (tripUid, isUpVote, userUid) => {
+  await Like.update(
+    { isUpVote },
+    {
+      where: {
+        userUid,
+        tripUid,
+      },
+      individualHooks: true,
+    }
+  );
+};
+
+module.exports.addTripLike = async (tripUid, isUpVote, userUid) => {
+  const result = await Like.findOne({ where: { tripUid, userUid } });
+  if (result) throw new CustomError(400, 'Bad Request');
+
+  return Like.create({ isUpVote, tripUid, userUid });
+};

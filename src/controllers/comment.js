@@ -11,6 +11,7 @@ const {
 const Post = require('../models/Post');
 const Photo = require('../models/Photo');
 const Localization = require('../models/Localization');
+const { tripExists } = require('../services/trip');
 
 const COMMENTS_PER_REQEST = 10;
 
@@ -57,6 +58,17 @@ module.exports.add = async (commentData, userUid) => {
   const { postUid } = commentData;
   const isPostExists = await postExists(postUid);
   if (!isPostExists) throw new CustomError(400, 'Bad Request');
+
+  const commentToAdd = { ...commentData, userUid };
+  const comment = await Comment.create(commentToAdd);
+
+  return comment;
+};
+
+module.exports.addTripComment = async (commentData, userUid) => {
+  const { tripUid } = commentData;
+  const isTripExists = await tripExists(tripUid);
+  if (!isTripExists) throw new CustomError(400, 'Bad Request');
 
   const commentToAdd = { ...commentData, userUid };
   const comment = await Comment.create(commentToAdd);

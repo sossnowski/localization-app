@@ -6,6 +6,8 @@ const {
   addLike,
   setCommentLike,
   addCommentLike,
+  setTripLike,
+  addTripLike,
 } = require('../controllers/like');
 const { auth } = require('../services/auth');
 const {
@@ -90,6 +92,45 @@ router.post(
         actionUser: req.data,
         localizationUid: req.body.localizationUid,
       });
+      res.status(201).json(like);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.patch(
+  '/trip',
+  auth,
+  validate(validationRules),
+  async (req, res, next) => {
+    try {
+      await setTripLike(req.body.tripUid, req.body.isUpVote, req.data.uid);
+      res.status(200).json({
+        message: 'success',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.post(
+  '/trip',
+  auth,
+  validate(validationRules),
+  async (req, res, next) => {
+    try {
+      const like = await addTripLike(
+        req.body.tripUid,
+        req.body.isUpVote,
+        req.data.uid
+      );
+      // emitPostLikeEvent(req.app.get('io'), {
+      //   like,
+      //   actionUser: req.data,
+      //   localizationUid: req.body.localizationUid,
+      // });
       res.status(201).json(like);
     } catch (error) {
       next(error);

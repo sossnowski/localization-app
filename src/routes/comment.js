@@ -9,6 +9,7 @@ const {
   deleteByUid,
   getLikes,
   getPostByComment,
+  addTripComment,
 } = require('../controllers/comment');
 const { emitCommentEvent } = require('../services/socket/comment');
 const validationRules = require('../validation/comment');
@@ -85,5 +86,27 @@ router.get('/likes/:uid', auth, async (req, res, next) => {
     next(error);
   }
 });
+
+// trips
+
+router.post(
+  '/trip',
+  auth,
+  validate(validationRules),
+  async (req, res, next) => {
+    try {
+      const comment = await addTripComment(req.body, req.data.uid);
+      // emitCommentEvent(req.app.get('io'), {
+      //   comment,
+      //   actionUser: req.data,
+      //   localizationUid: req.body.localizationUid,
+      // });
+
+      res.status(201).json(comment);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 module.exports = router;

@@ -12,7 +12,7 @@ const Notification = db.define(
     text: {
       type: Sequelize.DataTypes.STRING,
       allowNull: false,
-      unique: true,
+      unique: 'text',
     },
     number: {
       type: Sequelize.DataTypes.INTEGER,

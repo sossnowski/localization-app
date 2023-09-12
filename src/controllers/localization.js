@@ -1,9 +1,10 @@
+const { Op } = require('sequelize');
 const Localization = require('../models/Localization');
 const sequelize = require('../config/db');
 const Category = require('../models/Category');
-const Post = require('../models/Post');
 const {
   filterLocalizationsByCoordinates,
+  filterLocalizationsByCoordinatesMobile,
 } = require('../services/localization');
 
 module.exports.getAll = async () => Localization.findAll({});
@@ -77,7 +78,33 @@ module.exports.getFromAreaMobile = async (points, categories) => {
     group: ['uid'],
   });
 
-  return filterLocalizationsByCoordinates(allExtentLocalizations, {
+  return filterLocalizationsByCoordinatesMobile(allExtentLocalizations, {
+    minX,
+    maxX,
+    minY,
+    maxY,
+  });
+};
+
+module.exports.getOwnFromAreaMobile = async (points, categories, userUid) => {
+  const { minX, maxX, minY, maxY } = points;
+  const contains = sequelize.fn(
+    'ST_CONTAINS',
+    sequelize.fn(
+      'ST_POLYFROMTEXT',
+      `POLYGON((${minX} ${maxY},${maxX} ${maxY},${maxX} ${minY},${minX} ${minY},${minX} ${maxY}))`
+    ),
+    sequelize.col('geometry')
+  );
+
+  const allExtentLocalizations = await Localization.findAll({
+    raw: true,
+    attributes: ['uid', 'geometry', 'city'],
+    where: { [Op.and]: [contains, { userUid }] },
+    group: ['uid'],
+  });
+
+  return filterLocalizationsByCoordinatesMobile(allExtentLocalizations, {
     minX,
     maxX,
     minY,

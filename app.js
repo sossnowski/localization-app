@@ -10,7 +10,8 @@ app.use(compression());
 const userRoutes = require('./src/routes/user');
 const postRoutes = require('./src/routes/post');
 const likeRoutes = require('./src/routes/like');
-const initRoutes = require('./src/routes/init');
+const tripsRoutes = require('./src/routes/trip');
+const tripCategoryRoutes = require('./src/routes/tripCategory');
 const commentRoutes = require('./src/routes/comment');
 const localizationRoutes = require('./src/routes/localization');
 const categoryRoutes = require('./src/routes/category');
@@ -56,6 +57,8 @@ app.use('/comment', commentRoutes);
 app.use('/localization', localizationRoutes);
 app.use('/category', categoryRoutes);
 app.use('/notification', notificationRoutes);
+app.use('/trip', tripsRoutes);
+app.use('/tripCategory', tripCategoryRoutes);
 
 app.use((req, res, next) => {
   const error = new Error('Not found');

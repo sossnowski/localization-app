@@ -14,7 +14,7 @@ const Post = db.define(
     },
     title: {
       type: Sequelize.DataTypes.STRING,
-      allowNull: false,
+      // allowNull: false,
     },
     description: {
       type: Sequelize.DataTypes.TEXT,

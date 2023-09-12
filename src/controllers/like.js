@@ -9,6 +9,7 @@ module.exports.setLike = async (postUid, isUpVote, userUid) => {
         userUid,
         postUid,
       },
+      individualHooks: true,
     }
   );
 };
@@ -28,6 +29,7 @@ module.exports.setCommentLike = async (commentUid, isUpVote, userUid) => {
         userUid,
         commentUid,
       },
+      individualHooks: true,
     }
   );
 };

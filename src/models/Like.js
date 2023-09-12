@@ -30,6 +30,7 @@ Like.afterCreate(async (like, options) => {
 });
 
 Like.afterUpdate(async (like, options) => {
+  console.log(like.postUid, like.isUpVote);
   if (like.postUid) {
     const post = await like.getPost();
     if (like.isUpVote) {
@@ -39,7 +40,7 @@ Like.afterUpdate(async (like, options) => {
       post.likesNumber -= 1;
       post.dislikesNumber += 1;
     }
-    post.save();
+    await post.save();
   } else {
     const comment = await like.getComment();
     if (like.isUpVote) {
@@ -49,6 +50,6 @@ Like.afterUpdate(async (like, options) => {
       comment.dislikesNumber += 1;
       comment.likesNumber -= 1;
     }
-    comment.save();
+    await comment.save();
   }
 });

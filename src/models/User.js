@@ -4,6 +4,8 @@ const Post = require('./Post');
 const Like = require('./Like');
 const Comment = require('./Comment');
 const Notification = require('./Notification');
+const Trip = require('./Trip');
+const Localization = require('./Localization');
 
 const User = db.define('user', {
   uid: {
@@ -53,11 +55,15 @@ const User = db.define('user', {
 
 User.hasMany(Post);
 Post.belongsTo(User);
+User.hasMany(Localization);
+Localization.belongsTo(User);
 User.hasMany(Like);
 User.hasMany(Comment);
 Comment.belongsTo(User);
 User.hasMany(Notification, {
   onDelete: 'cascade',
 });
+User.hasMany(Trip);
+Trip.belongsTo(User);
 
 module.exports = User;

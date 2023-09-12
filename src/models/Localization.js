@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 const db = require('../config/db');
 const Post = require('./Post');
 const Category = require('./Category');
+const Trip = require('./Trip');
 
 const Localization = db.define(
   'localization',

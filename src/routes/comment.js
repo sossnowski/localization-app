@@ -27,15 +27,19 @@ router.get('/:postUid/:offset', auth, async (req, res, next) => {
   }
 });
 
-router.get('/withPost/byCommentUid/:commentUid', auth, async (req, res, next) => {
-  try {
-    const comments = await getPostByComment(req.params.commentUid);
+router.get(
+  '/withPost/byCommentUid/:commentUid',
+  auth,
+  async (req, res, next) => {
+    try {
+      const comments = await getPostByComment(req.params.commentUid);
 
-    res.status(200).json(comments);
-  } catch (error) {
-    next(error);
+      res.status(200).json(comments);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 router.post('/', auth, validate(validationRules), async (req, res, next) => {
   try {

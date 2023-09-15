@@ -6,6 +6,7 @@ const Post = require('../models/Post');
 const Photo = require('../models/Photo');
 const User = require('../models/User');
 const db = require('../config/db');
+const Like = require('../models/Like');
 
 module.exports.getTripsFromAreaMobile = async (points, categories) => {
   const { minX, maxX, minY, maxY } = points;
@@ -69,6 +70,7 @@ module.exports.getTripByUid = async (uid) =>
         attributes: ['name'],
       },
       { model: User, attributes: ['username'] },
+      { model: Like, attributes: ['userUid', 'tripUid', 'isUpVote', 'uid'] },
     ],
   });
 

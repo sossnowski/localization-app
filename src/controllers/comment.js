@@ -1,3 +1,5 @@
+const { Op } = require('sequelize');
+
 const db = require('../config/db');
 const Comment = require('../models/Comment');
 const Like = require('../models/Like');
@@ -15,10 +17,12 @@ const { tripExists } = require('../services/trip');
 
 const COMMENTS_PER_REQEST = 10;
 
-module.exports.getPostComments = async (postUid, offset) => {
+module.exports.getComments = async (parentUid, offset) => {
   const parsed = parseInt(offset);
   const comments = await Comment.findAll({
-    where: { postUid },
+    where: {
+      [Op.or]: [{ postUid: parentUid }, { tripUid: parentUid }],
+    },
     include: [{ model: User, attributes: ['username', 'uid'] }, Like],
     order: [['likesNumber', 'desc']],
     offset: parsed || 0,
@@ -55,23 +59,10 @@ module.exports.getPostByComment = async (commentUid) => {
 };
 
 module.exports.add = async (commentData, userUid) => {
-  const { postUid } = commentData;
-  const isPostExists = await postExists(postUid);
-  if (!isPostExists) throw new CustomError(400, 'Bad Request');
-
+  const transaction = await db.transaction();
   const commentToAdd = { ...commentData, userUid };
-  const comment = await Comment.create(commentToAdd);
-
-  return comment;
-};
-
-module.exports.addTripComment = async (commentData, userUid) => {
-  const { tripUid } = commentData;
-  const isTripExists = await tripExists(tripUid);
-  if (!isTripExists) throw new CustomError(400, 'Bad Request');
-
-  const commentToAdd = { ...commentData, userUid };
-  const comment = await Comment.create(commentToAdd);
+  const comment = await Comment.create(commentToAdd, { transaction });
+  await transaction.commit();
 
   return comment;
 };
@@ -90,22 +81,13 @@ module.exports.update = async (commentData, userUid) => {
 module.exports.deleteByUid = async (commentUid, userUid) => {
   const isAllowedToRemove = await isUserCommentOwner(commentUid, userUid);
   if (!isAllowedToRemove) throw new CustomError(400, 'Bad Request');
-  const comment = await Comment.findOne({
-    where: { uid: commentUid },
-    raw: true,
-  });
 
   await db.transaction(async (t) => {
-    await postExists.save;
     await Comment.destroy(
       {
         where: { uid: commentUid },
+        individualHooks: true,
       },
-      { transaction: t }
-    );
-    Post.decrement(
-      'commentNumber',
-      { where: { uid: comment.postUid } },
       { transaction: t }
     );
     await removeRelatedNotifications(commentUid, t);

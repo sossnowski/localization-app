@@ -3,6 +3,7 @@ const CustomError = require('../helpers/error');
 const Like = require('../models/Like');
 
 module.exports.setLike = async (postUid, isUpVote, userUid) => {
+  const transaction = await db.transaction();
   await Like.update(
     { isUpVote },
     {
@@ -11,15 +12,21 @@ module.exports.setLike = async (postUid, isUpVote, userUid) => {
         postUid,
       },
       individualHooks: true,
+      transaction,
     }
   );
+  await transaction.commit();
 };
 
 module.exports.addLike = async (postUid, isUpVote, userUid) => {
-  const result = await Like.findOne({ where: { postUid, userUid } });
-  if (result) throw new CustomError(400, 'Bad Request');
+  const transaction = await db.transaction();
 
-  return Like.create({ isUpVote, postUid, userUid });
+  const like = await Like.create(
+    { isUpVote, postUid, userUid },
+    { transaction }
+  );
+
+  return like;
 };
 
 module.exports.setCommentLike = async (commentUid, isUpVote, userUid) => {
@@ -58,8 +65,6 @@ module.exports.setTripLike = async (tripUid, isUpVote, userUid) => {
 };
 
 module.exports.addTripLike = async (tripUid, isUpVote, userUid) => {
-  const result = await Like.findOne({ where: { tripUid, userUid } });
-  if (result) throw new CustomError(400, 'Bad Request');
   const transaction = await db.transaction();
   const like = await Like.create(
     { isUpVote, tripUid, userUid },

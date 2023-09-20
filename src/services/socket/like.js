@@ -35,22 +35,23 @@ module.exports.emitCommentLikeEvent = async (io, data) => {
       { model: User, attributes: ['mobileToken', 'configuration'] },
     ],
   });
+  if (comment.post) {
+    if (comment.userUid !== data.actionUser.uid) {
+      const notification = await commentLike(
+        {
+          username: data.actionUser.username,
+          isUpVote: data.like.isUpVote,
+          commentUid: comment.uid,
+        },
+        comment.userUid
+      );
+      sendNotification(notification, comment.user);
+      io.to(comment.userUid).emit('notification', notification);
+    }
 
-  if (comment.userUid !== data.actionUser.uid) {
-    const notification = await commentLike(
-      {
-        username: data.actionUser.username,
-        isUpVote: data.like.isUpVote,
-        commentUid: comment.uid,
-      },
-      comment.userUid
-    );
-    sendNotification(notification, comment.user);
-    io.to(comment.userUid).emit('notification', notification);
+    io.sockets.in(`Loc_${data.localizationUid}`).emit('commentLike', {
+      like: data.like,
+      postUid: comment.post.uid,
+    });
   }
-
-  io.sockets.in(`Loc_${data.localizationUid}`).emit('commentLike', {
-    like: data.like,
-    postUid: comment.post.uid,
-  });
 };

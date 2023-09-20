@@ -30,7 +30,26 @@ Like.belongsTo(Comment);
 module.exports = Comment;
 
 Comment.afterCreate(async (comment, options) => {
-  const post = await comment.getPost();
-  post.commentNumber += 1;
-  post.save();
+  if (comment.postUid) {
+    const post = await comment.getPost();
+    post.commentNumber += 1;
+    await post.save({ transaction: options.transaction });
+  } else if (comment.tripUid) {
+    const trip = await comment.getTrip();
+    trip.commentNumber += 1;
+    await trip.save({ transaction: options.transaction });
+  }
+});
+
+Comment.afterDestroy(async (comment, options) => {
+  console.log('jest', comment);
+  if (comment.postUid) {
+    const post = await comment.getPost();
+    post.commentNumber -= 1;
+    await post.save({ transaction: options.transaction });
+  } else if (comment.tripUid) {
+    const trip = await comment.getTrip();
+    trip.commentNumber -= 1;
+    await trip.save({ transaction: options.transaction });
+  }
 });

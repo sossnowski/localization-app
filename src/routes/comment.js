@@ -3,24 +3,20 @@ const { auth } = require('../services/auth');
 
 const router = express.Router();
 const {
-  getPostComments,
   add,
   update,
   deleteByUid,
   getLikes,
   getPostByComment,
-  addTripComment,
+  getComments,
 } = require('../controllers/comment');
 const { emitCommentEvent } = require('../services/socket/comment');
 const validationRules = require('../validation/comment');
 const validate = require('../validation/main');
 
-router.get('/:postUid/:offset', auth, async (req, res, next) => {
+router.get('/:parentUid/:offset', auth, async (req, res, next) => {
   try {
-    const comments = await getPostComments(
-      req.params.postUid,
-      req.params.offset
-    );
+    const comments = await getComments(req.params.parentUid, req.params.offset);
 
     res.status(200).json(comments);
   } catch (error) {
@@ -86,27 +82,5 @@ router.get('/likes/:uid', auth, async (req, res, next) => {
     next(error);
   }
 });
-
-// trips
-
-router.post(
-  '/trip',
-  auth,
-  validate(validationRules),
-  async (req, res, next) => {
-    try {
-      const comment = await addTripComment(req.body, req.data.uid);
-      // emitCommentEvent(req.app.get('io'), {
-      //   comment,
-      //   actionUser: req.data,
-      //   localizationUid: req.body.localizationUid,
-      // });
-
-      res.status(201).json(comment);
-    } catch (error) {
-      next(error);
-    }
-  }
-);
 
 module.exports = router;

@@ -7,6 +7,7 @@ const {
   createTrip,
   getTripsFromAreaMobile,
   getTripByUid,
+  deleteTripByUid,
 } = require('../controllers/trip');
 
 const router = express.Router();
@@ -49,5 +50,15 @@ router.post(
     }
   }
 );
+
+router.delete('/:uid', auth, async (req, res, next) => {
+  try {
+    await deleteTripByUid(req.params.uid, req.data.uid);
+
+    res.status(200).json({ message: 'Successfuly removed' });
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = router;

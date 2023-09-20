@@ -7,6 +7,9 @@ const Photo = require('../models/Photo');
 const User = require('../models/User');
 const db = require('../config/db');
 const Like = require('../models/Like');
+const { isUserTripOwner } = require('../services/trip');
+const CustomError = require('../helpers/error');
+const { removeRelatedNotifications } = require('../services/post');
 
 module.exports.getTripsFromAreaMobile = async (points, categories) => {
   const { minX, maxX, minY, maxY } = points;
@@ -98,4 +101,19 @@ module.exports.createTrip = async (trip, userUid) => {
     await transaction.rollback();
     throw e;
   }
+};
+
+module.exports.deleteTripByUid = async (tripUid, userUid) => {
+  const isAllowedToRemove = await isUserTripOwner(tripUid, userUid);
+  if (!isAllowedToRemove) throw new CustomError(400, 'Bad Request');
+  const transaction = await db.transaction();
+  await Trip.destroy(
+    {
+      where: { uid: tripUid },
+    },
+    { transaction }
+  );
+
+  await removeRelatedNotifications(tripUid, transaction);
+  await transaction.commit();
 };

@@ -51,7 +51,11 @@ module.exports.removeRelatedNotifications = async (postUid, t) => {
     {
       where: {
         text: {
-          [Op.or]: [`postUid:${postUid}`, `addComment:${postUid}`],
+          [Op.or]: [
+            `postUid:${postUid}`,
+            `addComment:${postUid}`,
+            `tripUid:${postUid}`,
+          ],
         },
       },
     },
